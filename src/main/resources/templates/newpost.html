@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>New Post</title>
+    <style>
+       input
+       {
+            width:80%;
+        }
+    </style>
+</head>
+<body>
+    <div align="center">
+        <h1>New Posts</h1>
+        <form action="#" th:action="@{/savePost}" th:object="${post}" method="POST">
+            <input type="text" th:field="*{title}" placeholder="Enter Title" required>
+            <br>
+            <input type="text" th:object="${tag}" placeholder="Enter Tags">
+            <br>
+            <textarea th:field="*{content}" required rows="30" cols="40">
+            </textarea>
+            <br>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</body>
+</html>

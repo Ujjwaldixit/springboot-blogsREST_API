@@ -9,4 +9,5 @@ import java.util.List;
 @Service
 public interface PostService {
     List<Post> getAllPosts();
+    void savePost(Post post);
 }

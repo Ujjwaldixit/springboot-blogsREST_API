@@ -15,7 +15,7 @@ import java.sql.Timestamp;
 @Table(name="post",schema = "blog")
 public class Post {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String title;
     private String excerpt;

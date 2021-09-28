@@ -8,10 +8,17 @@
     <h1>Index Page</h1>
     <div align="center">
         <H1>posts</H1>
-        <tbody>
             Success
-            </tr>
-        </tbody>
+            <a th:href="@{/showNewPostForm}">Add Post</a>
+            <br>
+        <p>------------------------------------------------------</p>
+            <div th:each="post :${posts}">
+                <h1 th:text="${post.title}"></h1>
+                <h2 th:text="${post.author}"></h2>
+                <h4 th:text="${post.createdAt}"></h4>
+                <h3 th:text="${post.content}"></h3>
+                <p>------------------------------------------------------</p>
+            </div>
     </div>
 </body>
 </html>
