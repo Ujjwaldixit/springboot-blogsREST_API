@@ -16,7 +16,7 @@
         <form action="#" th:action="@{/savePost}" th:object="${post}" method="POST">
             <input type="text" th:field="*{title}" placeholder="Enter Title" required>
             <br>
-            <input type="text" th:object="${tag}" placeholder="Enter Tags">
+            <input type="text" name="tagName" placeholder="Enter Tags">
             <br>
             <textarea th:field="*{content}" required rows="30" cols="40">
             </textarea>
