@@ -5,20 +5,47 @@
     <title>Index</title>
 </head>
 <body>
-    <h1>Index Page</h1>
-    <div align="center">
-        <H1>posts</H1>
-            Success
-            <a th:href="@{/showNewPostForm}">Add Post</a>
-            <br>
+<h1>Index Page</h1>
+<div align="center">
+    <H1>posts</H1>
+    Success
+    <a th:href="@{/showNewPostForm}">Add Post</a>
+    <br>
+    <p>------------------------------------------------------</p>
+    <div th:each="post :${posts}">
+        <h1 th:text="${post.title}"></h1>
+        <h2 th:text="${post.author}"></h2>
+        <h4 th:text="${post.createdAt}"></h4>
+        <h3 th:text="${post.content}"></h3>
         <p>------------------------------------------------------</p>
-            <div th:each="post :${posts}">
-                <h1 th:text="${post.title}"></h1>
-                <h2 th:text="${post.author}"></h2>
-                <h4 th:text="${post.createdAt}"></h4>
-                <h3 th:text="${post.content}"></h3>
-                <p>------------------------------------------------------</p>
-            </div>
     </div>
+
+
+    <div th:if="${totalPages > 0}">
+        <div class="row col-sm-10">
+            <div class="col-sm-2">
+                Total Rows: [[${totalItems}]]
+            </div>
+            <div class="col-sm-1">
+                    <span th:each="i: ${#numbers.sequence(1, totalPages)}">
+                      <a th:if="${currentPage != i}" th:href="@{'/page/' + ${i}}">[[${i}]]</a>
+                        <span th:unless="${currentPage != i}">[[${i}]]</span> &nbsp; &nbsp;
+                    </span>
+            </div>
+            <div class="col-sm-1">
+                <a th:if="${currentPage < totalPages}" th:href="@{'/page/' + ${currentPage + 1}}">Next</a>
+                <span th:unless="${currentPage < totalPages}">Next</span>
+            </div>
+
+            <div class="col-sm-1">
+                <a th:if="${currentPage < totalPages}" th:href="@{'/page/' + ${totalPages}}">Last</a>
+                <span th:unless="${currentPage < totalPages}">Last</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</div>
 </body>
 </html>
