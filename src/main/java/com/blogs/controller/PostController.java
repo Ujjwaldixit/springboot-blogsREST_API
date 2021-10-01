@@ -41,10 +41,12 @@ public class PostController {
     public String homePage(Model model,
                            @RequestParam(name="start",defaultValue = "0",required = false) int pageNo,
                            @RequestParam(name="limit",defaultValue ="10",required = false) int pageSize,
-                           @RequestParam(name="sortField",defaultValue = "title")String sortBy
+                           @RequestParam(name="sortField",defaultValue = "id",required = false)String sortBy,
+                           @RequestParam(name="order",defaultValue="null",required = false) String order
     )
     {
-        Page<Post> page=postService.getAllPosts(pageNo,pageSize,sortBy);
+        System.out.println("order="+order);
+        Page<Post> page=postService.getAllPosts(pageNo,pageSize,sortBy,order);
         List<Post> posts=page.getContent();
         model.addAttribute("currentPage", pageNo);
         model.addAttribute("totalPages", page.getTotalPages());

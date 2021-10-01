@@ -10,7 +10,8 @@
     <H1>posts</H1>
     Success
     <a th:href="@{/showNewPostForm}">Add Post</a>
-    <a th:href="@{/}">Sort</a>
+    <a th:href="@{'/?sortField=' +${'id'}+'&order='+${'asc'}}">Sort</a>
+
     <br>
     <p>------------------------------------------------------</p>
     <div th:each="post :${posts}">
@@ -20,6 +21,8 @@
         <h3 th:text="${post.content}"></h3>
         <p>------------------------------------------------------</p>
     </div>
+
+
 
     <div th:if="${totalPages > 0}">
         <div class="row col-sm-10">

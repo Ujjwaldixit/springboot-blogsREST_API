@@ -9,6 +9,6 @@ import java.util.List;
 
 @Service
 public interface PostService {
-    Page<Post> getAllPosts(int pageNo, int pageSize, String sortBy);
+    Page<Post> getAllPosts(int pageNo, int pageSize, String sortBy,String order);
     void savePost(Post post);
 }

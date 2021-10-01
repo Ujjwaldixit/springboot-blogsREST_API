@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 @Service
@@ -19,8 +20,18 @@ public class PostServiceImpl implements PostService{
     private PostRepository postRepository;
 
     @Override
-    public Page<Post> getAllPosts(int pageNo,int pageSize,String sortBy) {
-        Pageable pageable=PageRequest.of(pageNo,pageSize, Sort.by(sortBy));
+    public Page<Post> getAllPosts(int pageNo,int pageSize,String sortBy,String order) {
+        Pageable pageable;
+        if(order.equals("asc")) {
+            pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).ascending());
+        }
+        if(order.equals("desc")) {
+            pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).descending());
+        }
+        else{
+            pageable=PageRequest.of(pageNo,pageSize);
+        }
+
         Page<Post> pageResult=postRepository.findAll(pageable);
         return pageResult;
     }
