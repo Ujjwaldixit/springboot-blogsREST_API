@@ -9,7 +9,6 @@ import java.util.List;
 
 @Service
 public interface PostService {
-    List<Post> getAllPosts();
+    Page<Post> getAllPosts(int pageNo, int pageSize, String sortBy);
     void savePost(Post post);
-    Page<Post> findPaginated(int pageNo, int pageSize);
 }

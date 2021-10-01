@@ -10,6 +10,7 @@
     <H1>posts</H1>
     Success
     <a th:href="@{/showNewPostForm}">Add Post</a>
+    <a th:href="@{/}">Sort</a>
     <br>
     <p>------------------------------------------------------</p>
     <div th:each="post :${posts}">
@@ -20,7 +21,6 @@
         <p>------------------------------------------------------</p>
     </div>
 
-
     <div th:if="${totalPages > 0}">
         <div class="row col-sm-10">
             <div class="col-sm-2">
@@ -28,18 +28,8 @@
             </div>
             <div class="col-sm-1">
                     <span th:each="i: ${#numbers.sequence(1, totalPages)}">
-                      <a th:if="${currentPage != i}" th:href="@{'/page/' + ${i}}">[[${i}]]</a>
-                        <span th:unless="${currentPage != i}">[[${i}]]</span> &nbsp; &nbsp;
+                      <a th:if="${currentPage != i-1}" th:href="@{'/?start=' +${i-1}+'&limit='+${10}}">[[${i}]]</a>
                     </span>
-            </div>
-            <div class="col-sm-1">
-                <a th:if="${currentPage < totalPages}" th:href="@{'/page/' + ${currentPage + 1}}">Next</a>
-                <span th:unless="${currentPage < totalPages}">Next</span>
-            </div>
-
-            <div class="col-sm-1">
-                <a th:if="${currentPage < totalPages}" th:href="@{'/page/' + ${totalPages}}">Last</a>
-                <span th:unless="${currentPage < totalPages}">Last</span>
             </div>
         </div>
     </div>

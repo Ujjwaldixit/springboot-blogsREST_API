@@ -24,11 +24,35 @@ public class PostController {
     @Autowired
     private TagService tagService;
 
+
+//    @GetMapping("/page/{pageNo}")
+//    public String findPaginated(@PathVariable(value = "pageNo") int pageNo, Model model) {
+//        int pageSize = 10;
+//
+////       // Page<Post> page = postService.findPaginated(pageNo, pageSize);
+////        List<Post> posts = page.getContent();
+////        model.addAttribute("currentPage", pageNo);
+////        model.addAttribute("totalPages", page.getTotalPages());
+////        model.addAttribute("totalItems", page.getTotalElements());
+////        model.addAttribute("posts", posts);
+////        return "index";
+//    }
     @GetMapping("/")
-    public String homePage(Model model)
+    public String homePage(Model model,
+                           @RequestParam(name="start",defaultValue = "0",required = false) int pageNo,
+                           @RequestParam(name="limit",defaultValue ="10",required = false) int pageSize,
+                           @RequestParam(name="sortField",defaultValue = "title")String sortBy
+    )
     {
-        return findPaginated(1, model);
+        Page<Post> page=postService.getAllPosts(pageNo,pageSize,sortBy);
+        List<Post> posts=page.getContent();
+        model.addAttribute("currentPage", pageNo);
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("posts", posts);
+        return "index";
     }
+
+
     @GetMapping("/showNewPostForm")
     public String newPost(Model model)
     {
@@ -46,18 +70,5 @@ public class PostController {
         tag.setName(tagName);
         tagService.saveTag(tag);
         return "redirect:/";
-    }
-
-    @GetMapping("/page/{pageNo}")
-    public String findPaginated(@PathVariable(value = "pageNo") int pageNo, Model model) {
-        int pageSize = 10;
-
-        Page<Post> page = postService.findPaginated(pageNo, pageSize);
-        List<Post> posts = page.getContent();
-        model.addAttribute("currentPage", pageNo);
-        model.addAttribute("totalPages", page.getTotalPages());
-        model.addAttribute("totalItems", page.getTotalElements());
-        model.addAttribute("posts", posts);
-        return "index";
     }
 }

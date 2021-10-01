@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 @Service
 @Transactional
@@ -17,8 +19,10 @@ public class PostServiceImpl implements PostService{
     private PostRepository postRepository;
 
     @Override
-    public List<Post> getAllPosts() {
-        return postRepository.findAll(); //returns list of all posts
+    public Page<Post> getAllPosts(int pageNo,int pageSize,String sortBy) {
+        Pageable pageable=PageRequest.of(pageNo,pageSize, Sort.by(sortBy));
+        Page<Post> pageResult=postRepository.findAll(pageable);
+        return pageResult;
     }
 
     public void savePost(Post post)
@@ -26,9 +30,9 @@ public class PostServiceImpl implements PostService{
         this.postRepository.save(post);
     }
 
-    @Override
-    public Page<Post> findPaginated(int pageNo, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
-        return this.postRepository.findAll(pageable);
-    }
+//    @Override
+//    public Page<Post> findPaginated(int pageNo, int pageSize) {
+//        Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+//        return this.postRepository.findAll(pageable);
+//    }
 }
