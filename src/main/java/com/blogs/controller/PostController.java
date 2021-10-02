@@ -65,10 +65,9 @@ public class PostController {
 
     //save post and tags to database
     @PostMapping("/savePost")
-    public String savePost(@ModelAttribute("post")Post post,@RequestParam("tagName")String tagName)
+    public String savePost(@ModelAttribute("post")Post post,@RequestParam("tagName")String tagName,Tag tag)
     {
         postService.savePost(post);
-        Tag tag=new Tag();
         tag.setName(tagName);
         tagService.saveTag(tag);
         return "redirect:/";
