@@ -13,7 +13,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void register(User user) {
-        if(user!=null)
+        if(userRepository.existsById(user.getEmail()))
         {
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
             String encodedPassword = passwordEncoder.encode(user.getPassword());

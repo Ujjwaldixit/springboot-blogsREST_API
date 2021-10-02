@@ -21,10 +21,12 @@ public class UserController {
         return "registrationForm";
     }
 
-    @PostMapping
-    public void registerUser(@ModelAttribute("user")User user)
+    @PostMapping("/registerUser")
+    public String registerUser(@ModelAttribute("user")User user)
     {
+        System.out.println(user.getName()+" "+user.getEmail()+" "+user.getPassword());
         userService.register(user);
+        return "registrationForm";
     }
 
 }
