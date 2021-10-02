@@ -8,6 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 
 @Controller
 public class UserController {
@@ -22,11 +24,17 @@ public class UserController {
     }
 
     @PostMapping("/registerUser")
-    public String registerUser(@ModelAttribute("user")User user)
+    public String registerUser(@ModelAttribute("user")User user, RedirectAttributes redirectAttributes)
     {
         System.out.println(user.getName()+" "+user.getEmail()+" "+user.getPassword());
-        userService.register(user);
-        return "registrationForm";
+        boolean checkRegistered=userService.register(user);
+        if(checkRegistered) {
+            redirectAttributes.addFlashAttribute("success","!!! Registered Successfully !!!");
+        }
+        else {
+            redirectAttributes.addFlashAttribute("error","!!! Already Registered !!!");
+        }
+        return "redirect:/register";
     }
 
 }

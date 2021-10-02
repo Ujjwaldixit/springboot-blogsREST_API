@@ -12,17 +12,19 @@ public class UserServiceImpl implements UserService{
     private UserRepository userRepository;
 
     @Override
-    public void register(User user) {
-        if(userRepository.existsById(user.getEmail()))
+    public boolean register(User user) {
+        if(user!=null &&!userRepository.existsById(user.getEmail()))
         {
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
             String encodedPassword = passwordEncoder.encode(user.getPassword());
             user.setPassword(encodedPassword);
             userRepository.save(user);
             System.out.println("Registered");
+            return true;
         }
         else{
             System.out.println("not registered");
+            return false;
         }
     }
 

@@ -7,16 +7,23 @@
 <body>
 <h1> Registration form</h1>
     <form action="" th:action="@{/registerUser}" th:object="${user}" method="POST">
+
+<!--        <div class="alert alert-success">${param.success}</div>-->
+<!--        <div th:if="${param.error}" class="alert alert-error"> Error</div>-->
+
+        <div class="alert alert-success text-center" role="alert" th:text="${success}" th:if="${success}"></div>
+        <div class="alert alert-error text-center" role="alert" th:text="${error}" th:if="${error}"></div>
+        <br>
         <label th:text="Name">Name</label>
-        <input type="text" th:field="*{name}" placeholder="Enter name">
+        <input required type="text" th:field="*{name}" placeholder="Enter name">
         <br>
         <br>
         <label th:text="Email">Email</label>
-        <input type="email" th:field="*{email}" placeholder="Enter email">
+        <input required type="email" th:field="*{email}" placeholder="Enter email">
         <br>
         <br>
         <label th:text="Password">Password</label>
-        <input type="password" th:field="*{password}" placeholder="Enter Password">
+        <input required type="password" th:field="*{password}" placeholder="Enter Password">
         <br>
         <br>
         <button  type="submit">Submit</button>
