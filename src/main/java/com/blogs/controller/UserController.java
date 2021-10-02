@@ -26,7 +26,7 @@ public class UserController {
     @PostMapping("/registerUser")
     public String registerUser(@ModelAttribute("user")User user, RedirectAttributes redirectAttributes)
     {
-        System.out.println(user.getName()+" "+user.getEmail()+" "+user.getPassword());
+        System.out.println(user.getName()+" "+user.getEmail()+" "+user.getPassword()+" "+user.getRole());
         boolean checkRegistered=userService.register(user);
         if(checkRegistered) {
             redirectAttributes.addFlashAttribute("success","!!! Registered Successfully !!!");

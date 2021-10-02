@@ -8,9 +8,6 @@
 <h1> Registration form</h1>
     <form action="" th:action="@{/registerUser}" th:object="${user}" method="POST">
 
-<!--        <div class="alert alert-success">${param.success}</div>-->
-<!--        <div th:if="${param.error}" class="alert alert-error"> Error</div>-->
-
         <div class="alert alert-success text-center" role="alert" th:text="${success}" th:if="${success}"></div>
         <div class="alert alert-error text-center" role="alert" th:text="${error}" th:if="${error}"></div>
         <br>
@@ -25,6 +22,11 @@
         <label th:text="Password">Password</label>
         <input required type="password" th:field="*{password}" placeholder="Enter Password">
         <br>
+        <label th:text="Role">Role</label>
+        <select>
+            <option th:field="*{role}" th:value="admin">Admin</option>
+            <option th:field="*{role}" th:value="user">User</option>
+        </select>
         <br>
         <button  type="submit">Submit</button>
     </form>
