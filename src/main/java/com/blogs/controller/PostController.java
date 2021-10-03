@@ -1,7 +1,9 @@
 package com.blogs.controller;
 
 import com.blogs.model.Post;
+import com.blogs.model.PostTag;
 import com.blogs.model.Tag;
+import com.blogs.repository.PostAndTagRepository;
 import com.blogs.service.PostService;
 import com.blogs.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,20 +25,9 @@ public class PostController {
     private PostService postService;
     @Autowired
     private TagService tagService;
+    @Autowired
+    private PostAndTagRepository postAndTagRepository;
 
-
-//    @GetMapping("/page/{pageNo}")
-//    public String findPaginated(@PathVariable(value = "pageNo") int pageNo, Model model) {
-//        int pageSize = 10;
-//
-////       // Page<Post> page = postService.findPaginated(pageNo, pageSize);
-////        List<Post> posts = page.getContent();
-////        model.addAttribute("currentPage", pageNo);
-////        model.addAttribute("totalPages", page.getTotalPages());
-////        model.addAttribute("totalItems", page.getTotalElements());
-////        model.addAttribute("posts", posts);
-////        return "index";
-//    }
     @GetMapping("/")
     public String homePage(Model model,
                            @RequestParam(name="start",defaultValue = "0",required = false) int pageNo,
@@ -65,11 +56,17 @@ public class PostController {
 
     //save post and tags to database
     @PostMapping("/savePost")
-    public String savePost(@ModelAttribute("post")Post post,@RequestParam("tagName")String tagName,Tag tag)
+    public String savePost(@ModelAttribute("post")Post post, @RequestParam("tagName")String tagName, Tag tag, PostTag postTag)
     {
         postService.savePost(post);
         tag.setName(tagName);
         tagService.saveTag(tag);
+
+        //saving post_tags
+        postTag.setPostId(post.getId());
+        postTag.setTagId(tag.getId());
+        postAndTagRepository.save(postTag);
+
         return "redirect:/";
     }
 }
