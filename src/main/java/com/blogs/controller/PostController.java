@@ -60,7 +60,7 @@ public class PostController {
     {
         Post post=new Post();
         model.addAttribute("post",post);
-        return "/newpost";
+        return "/newPost";
     }
 
     //save post and tags to database

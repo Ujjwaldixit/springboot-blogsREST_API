@@ -6,7 +6,7 @@
     <style>
        input
        {
-            width:80%;
+            width:50%;
         }
     </style>
 </head>
@@ -16,10 +16,13 @@
         <form action="#" th:action="@{/savePost}" th:object="${post}" method="POST">
             <input type="text" th:field="*{title}" placeholder="Enter Title" required>
             <br>
+            <br>
             <input type="text" name="tagName" placeholder="Enter Tags">
             <br>
-            <textarea th:field="*{content}" required rows="30" cols="40">
+            <br>
+            <textarea th:field="*{content}" required rows="10" cols="70">
             </textarea>
+            <br>
             <br>
             <button type="submit">Submit</button>
         </form>

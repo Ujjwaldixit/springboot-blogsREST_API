@@ -40,10 +40,4 @@ public class PostServiceImpl implements PostService{
     {
         this.postRepository.save(post);
     }
-
-//    @Override
-//    public Page<Post> findPaginated(int pageNo, int pageSize) {
-//        Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
-//        return this.postRepository.findAll(pageable);
-//    }
 }
