@@ -6,17 +6,16 @@
 </head>
 <body>
 <H1>Login Page</H1>
-<form th:action="/login" class="center">
+<form th:action="@{/loginUser}" class="center" method="POST">
 
-    <label th:text="Email Id">Email Id</label>
-    <input required type="text" th:field="*{email}" placeholder="Enter Email">
+    <label>Email Id</label>
+    <input required type="text" placeholder="Enter Email">
     <br>
     <br>
-    <label th:text="Password">Password</label>
-    <input required type="password" th:field="*{password}" placeholder="Enter password">
+    <label>Password</label>
+    <input required type="password" placeholder="Enter password">
     <br>
     <button type="submit">Submit</button>
-
 </form>
 
 </body>

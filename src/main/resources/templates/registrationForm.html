@@ -22,11 +22,13 @@
         <label th:text="Password">Password</label>
         <input required type="password" th:field="*{password}" placeholder="Enter Password">
         <br>
+        <br>
         <label th:text="Role">Role</label>
-        <select>
-            <option th:field="*{role}" th:value="admin">Admin</option>
-            <option th:field="*{role}" th:value="user">User</option>
+        <select th:field="*{role}">
+            <option th:field="*{role}" th:value="'ADMIN'">ADMIN</option>
+            <option th:field="*{role}" th:value="'AUTHOR'">AUTHOR</option>
         </select>
+        <br>
         <br>
         <button  type="submit">Submit</button>
     </form>

@@ -37,4 +37,18 @@ public class UserController {
         return "redirect:/register";
     }
 
+    @GetMapping("/login")
+    public String login()
+    {
+        System.out.println("Inside Login");
+        return "loginForm";
+    }
+
+    @PostMapping("/loginUser")
+    public void loginUser()
+    {
+        System.out.println("Logging user");
+    }
+
+
 }
