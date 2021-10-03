@@ -59,18 +59,26 @@ public class PostController {
     @PostMapping("/savePost")
     public String savePost(@ModelAttribute("post")Post post,@RequestParam("Tags") String tags, PostTag postTag)
     {
+        //save post
         int postId=postService.savePost(post);
+        //save tags
         List<Integer> tagIds=tagService.saveTag(tags);
 
         System.out.println(postId+ "   tag id= "+tagIds);
+        //save postId and tagID
         for(int tagId:tagIds)
         {
             postTag.setPostId(postId);
             postTag.setTagId(tagId);
             postAndTagRepository.save(postTag);
         }
-    
+
         return "redirect:/";
     }
 
+    @GetMapping("/fullPost")
+    public String displayFullPost()
+    {
+        return "fullPost";
+    }
 }
