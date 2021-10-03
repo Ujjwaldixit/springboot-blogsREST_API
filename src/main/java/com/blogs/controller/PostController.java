@@ -63,8 +63,13 @@ public class PostController {
         List<Integer> tagIds=tagService.saveTag(tags);
 
         System.out.println(postId+ "   tag id= "+tagIds);
-
-
+        for(int tagId:tagIds)
+        {
+            postTag.setPostId(postId);
+            postTag.setTagId(tagId);
+            postAndTagRepository.save(postTag);
+        }
+    
         return "redirect:/";
     }
 
