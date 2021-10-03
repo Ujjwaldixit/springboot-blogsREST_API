@@ -10,9 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
+
 @Service
 @Transactional
 public class PostServiceImpl implements PostService{
@@ -36,7 +34,7 @@ public class PostServiceImpl implements PostService{
         return pageResult;
     }
 
-    public void savePost(Post post)
+    public int savePost(Post post)
     {
         //setting excerpt
         if(post.getContent().length()>=100)
@@ -47,5 +45,6 @@ public class PostServiceImpl implements PostService{
             post.setExcerpt(post.getContent());
         }
         this.postRepository.save(post);
+        return post.getId();
     }
 }

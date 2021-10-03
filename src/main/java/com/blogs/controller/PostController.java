@@ -59,15 +59,11 @@ public class PostController {
     @PostMapping("/savePost")
     public String savePost(@ModelAttribute("post")Post post,@RequestParam("Tags") String tags, PostTag postTag)
     {
-      //  postService.savePost(post);
-      //  tagService.saveTag(tags);
-//        tag.setName(tagName);
-       tagService.saveTag(tags);
-        //System.out.println(tags.toString());
-        //saving post_tags
-//        postTag.setPostId(post.getId());
-//        postTag.setTagId(tag.getId());
-//        postAndTagRepository.save(postTag);
+        int postId=postService.savePost(post);
+        List<Integer> tagIds=tagService.saveTag(tags);
+
+        System.out.println(postId+ "   tag id= "+tagIds);
+
 
         return "redirect:/";
     }
