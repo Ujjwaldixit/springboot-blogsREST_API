@@ -36,7 +36,7 @@ public class PostController {
                            @RequestParam(name="order",defaultValue="null",required = false) String order
     )
     {
-        System.out.println("order="+order);
+        //System.out.println("order="+order);
         Page<Post> page=postService.getAllPosts(pageNo,pageSize,sortBy,order);
         List<Post> posts=page.getContent();
         model.addAttribute("currentPage", pageNo);
@@ -49,24 +49,27 @@ public class PostController {
     @GetMapping("/showNewPostForm")
     public String newPost(Model model)
     {
-        Post post=new Post();
-        model.addAttribute("post",post);
+        model.addAttribute("post",new Post());
+        List<Tag> tags=tagService.getAllTags();
+        model.addAttribute("tags",tags);
         return "/newPost";
     }
 
     //save post and tags to database
     @PostMapping("/savePost")
-    public String savePost(@ModelAttribute("post")Post post, @RequestParam("tagName")String tagName, Tag tag, PostTag postTag)
+    public String savePost(@ModelAttribute("post")Post post,@RequestParam("Tags") String tags, PostTag postTag)
     {
-        postService.savePost(post);
-        tag.setName(tagName);
-        tagService.saveTag(tag);
-
+      //  postService.savePost(post);
+      //  tagService.saveTag(tags);
+//        tag.setName(tagName);
+       tagService.saveTag(tags);
+        //System.out.println(tags.toString());
         //saving post_tags
-        postTag.setPostId(post.getId());
-        postTag.setTagId(tag.getId());
-        postAndTagRepository.save(postTag);
+//        postTag.setPostId(post.getId());
+//        postTag.setTagId(tag.getId());
+//        postAndTagRepository.save(postTag);
 
         return "redirect:/";
     }
+
 }

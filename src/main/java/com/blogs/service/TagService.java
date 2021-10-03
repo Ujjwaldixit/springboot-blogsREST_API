@@ -9,5 +9,5 @@ import java.util.List;
 @Service
 public interface TagService {
     List<Tag> getAllTags();
-    void saveTag(Tag tag);
+    void saveTag(String tag);
 }
