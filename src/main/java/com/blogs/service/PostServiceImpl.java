@@ -38,6 +38,14 @@ public class PostServiceImpl implements PostService{
 
     public void savePost(Post post)
     {
+        //setting excerpt
+        if(post.getContent().length()>=100)
+        {
+            post.setExcerpt(post.getContent().substring(0,90));
+        }
+        else{
+            post.setExcerpt(post.getContent());
+        }
         this.postRepository.save(post);
     }
 }
