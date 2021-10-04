@@ -47,4 +47,10 @@ public class PostServiceImpl implements PostService{
         this.postRepository.save(post);
         return post.getId();
     }
+
+    @Override
+    public Post findPostById(int id) {
+       Post post= postRepository.getOne(id);
+       return post;
+    }
 }

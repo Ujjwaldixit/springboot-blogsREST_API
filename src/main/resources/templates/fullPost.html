@@ -5,15 +5,15 @@
     <title>Full Post</title>
 </head>
 <body>
+<h1>[[${#request.userPrincipal.principal.name}]]</h1>
 <p>------------------------------------------------------</p>
 <div th:each="post :${posts}">
     <h1 th:text="${post.title}"></h1>
     <h2 th:text="${post.author}"></h2>
     <h4 th:text="${post.createdAt}"></h4>
     <h3 th:text="${post.content}">
-        ...
-        <a href="#" th:href="@{/fullPost}">Read More</a>
     </h3>
     <p>------------------------------------------------------</p>
+</div>
 </body>
 </html>
