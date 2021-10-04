@@ -8,8 +8,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
+import java.sql.Timestamp;
+
 
 @Service
 @Transactional
@@ -36,6 +37,8 @@ public class PostServiceImpl implements PostService{
 
     public int savePost(Post post)
     {
+        //setting createdAt time
+        post.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         //setting excerpt
         if(post.getContent().length()>=100)
         {

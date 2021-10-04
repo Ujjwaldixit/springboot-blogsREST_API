@@ -48,10 +48,8 @@ public class PostController {
 
 
     @GetMapping("/showNewPostForm")
-    public String newPost(@AuthenticationPrincipal UserDetailsImpl user, Model model)
+    public String newPost(@AuthenticationPrincipal UserDetailsImpl user, Model model,Post post)
     {
-
-        Post post=new Post();
         //to set author name
         post.setAuthor(user.getName());
         model.addAttribute("post",post);
@@ -65,20 +63,25 @@ public class PostController {
     @PostMapping("/savePost")
     public String savePost(@ModelAttribute("post")Post post,@RequestParam("Tags") String tags, PostTag postTag)
     {
+        //
         System.out.println("post author ="+post.getAuthor());
+        System.out.println("post="+post);
         int postId=postService.savePost(post);
         //save tags
-        List<Integer> tagIds=tagService.saveTag(tags);
+        List<Integer> tagIds = null;
+        if(!tags.equals("")) {
+            tagIds = tagService.saveTag(tags);
+        }
+        System.out.println("postId"+postId+ "   tag id= "+tagIds);
 
-        System.out.println(postId+ "   tag id= "+tagIds);
         //save postId and tagID
         for(int tagId:tagIds)
         {
             postTag.setPostId(postId);
-            postTag.setTagId(tagId);
+            if(!tags.equals(""))
+                postTag.setTagId(tagId);
             postAndTagRepository.save(postTag);
         }
-
         return "redirect:/";
     }
 
@@ -103,4 +106,5 @@ public class PostController {
         model.addAttribute("tags",tags);
         return "newPost";
     }
+
 }

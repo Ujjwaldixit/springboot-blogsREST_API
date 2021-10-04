@@ -31,7 +31,9 @@
         <input type="text" th:field="*{title}" placeholder="Enter Title" required>
         <br>
         <br>
+
         <input type="hidden" th:field="*{author}" th:value="${post.author}" required>
+        <input type="hidden" th:field="*{id}" th:value="${post.id}" required>
 
         <div class="container-fluid h-100 bg-light text-dark">
             <div class="row justify-content-center align-items-center">
