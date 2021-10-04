@@ -83,11 +83,14 @@ public class PostController {
     }
 
     @GetMapping("/fullPost/{postId}")
-    public String displayFullPost(@PathVariable("postId") int id,Model model)
+    public String displayFullPost(@AuthenticationPrincipal UserDetailsImpl user,@PathVariable("postId") int id,Model model)
     {
         Post post=postService.findPostById(id);
         model.addAttribute("posts",post);
+        if(user!=null)
+            model.addAttribute("userName",user.getName());
 //        System.out.println(post);
         return "fullPost";
     }
+
 }

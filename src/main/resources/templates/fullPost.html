@@ -1,14 +1,17 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <meta charset="UTF-8">
     <title>Full Post</title>
 </head>
 <body>
-<a th:href="updatePost" >Update post</a>
-<a th:href="deletePost">Delete post</a>
 
-<!--<h1>[[${#request.userPrincipal.principal.name}]]</h1>-->
+<div sec:authorize="isAuthenticated()" th:if="${userName}==${posts.author}">
+    <a th:href="@{/updatePost}">Update post</a>
+    <a th:href="@{/deletePost}">Delete post</a>
+</div>
+
 <p>------------------------------------------------------</p>
 <div th:each="post :${posts}">
     <h1 th:text="${post.title}"></h1>
