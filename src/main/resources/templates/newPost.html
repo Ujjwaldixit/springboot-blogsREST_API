@@ -8,11 +8,13 @@
        {
             width:50%;
         }
+
     </style>
     <style>
         .mul-select{
             width: 100%;
         }
+
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
@@ -23,49 +25,49 @@
 
 </head>
 <body>
-    <div align="center">
-        <h1>New Posts</h1>
-        <form action="#" th:action="@{/savePost}" th:object="${post}"  method="POST">
-            <input type="text" th:field="*{title}" placeholder="Enter Title" required>
-            <br>
-            <br>
+<div align="center">
+    <h1>New Posts</h1>
+    <form action="#" th:action="@{/savePost}" th:object="${post}" method="POST">
+        <input type="text" th:field="*{title}" placeholder="Enter Title" required>
+        <br>
+        <br>
+        <input type="hidden" th:field="*{author}" th:value="${post.author}" required>
 
-            <input type="hidden" th:field="*{author}" th:value="${post.author}" required>
-
-            <div class="container-fluid h-100 bg-light text-dark">
-                <div class="row justify-content-center align-items-center">
-                    <h5>Select Pre-Defined Tags</h5>
-                </div>
-                <br>
-                <div class="row justify-content-center align-items-center h-100">
-                    <div class="col col-sm-6 col-md-6 col-lg-4 col-xl-3">
-                        <div class="form-group">
-                            <select class="mul-select" multiple="true" name="Tags">
-                                <option th:each="tag:${tags}" th:text="${tag.name}" th:value="${tag.name}"></option>
-                            </select>
-                        </div>
+        <div class="container-fluid h-100 bg-light text-dark">
+            <div class="row justify-content-center align-items-center">
+                <h5>Select/Create #Tags</h5>
+            </div>
+            <br>
+            <div class="row justify-content-center align-items-center h-100">
+                <div class="col col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                    <div class="form-group">
+                        <select class="mul-select" multiple="true" name="Tags">
+                            <option th:each="tag:${tags}" th:text="${tag.name}" th:value="${tag.name}"></option>
+                        </select>
                     </div>
                 </div>
             </div>
-            <br>
-            <br>
-            <textarea th:field="*{content}" required rows="10" cols="70">
+        </div>
+        <br>
+        <br>
+        <textarea th:field="*{content}" required rows="10" cols="70">
             </textarea>
-            <br>
-            <br>
-            <button type="submit">Submit</button>
-        </form>
-    </div>
+        <br>
+        <br>
+        <button type="submit">Submit</button>
+    </form>
+</div>
 
 
-    <script>
+<script>
         $(document).ready(function(){
             $(".mul-select").select2({
-                    placeholder: "select country", //placeholder
+                    placeholder: "Select  #Tags", //placeholder
                     tags: true,
                     tokenSeparators: ['/',',',';'," "]
                 });
             })
-    </script>
+
+</script>
 </body>
 </html>

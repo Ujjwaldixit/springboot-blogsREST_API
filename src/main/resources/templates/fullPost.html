@@ -5,7 +5,10 @@
     <title>Full Post</title>
 </head>
 <body>
-<h1>[[${#request.userPrincipal.principal.name}]]</h1>
+<a th:href="updatePost" >Update post</a>
+<a th:href="deletePost">Delete post</a>
+
+<!--<h1>[[${#request.userPrincipal.principal.name}]]</h1>-->
 <p>------------------------------------------------------</p>
 <div th:each="post :${posts}">
     <h1 th:text="${post.title}"></h1>

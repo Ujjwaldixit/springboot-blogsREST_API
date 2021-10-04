@@ -7,14 +7,11 @@ import com.blogs.repository.PostAndTagRepository;
 import com.blogs.service.PostService;
 import com.blogs.service.TagService;
 import com.blogs.service.UserDetailsImpl;
-import com.blogs.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -59,7 +56,6 @@ public class PostController {
         post.setAuthor(user.getName());
         model.addAttribute("post",post);
 
-
         List<Tag> tags=tagService.getAllTags();
         model.addAttribute("tags",tags);
         return "/newPost";
@@ -69,18 +65,19 @@ public class PostController {
     @PostMapping("/savePost")
     public String savePost(@ModelAttribute("post")Post post,@RequestParam("Tags") String tags, PostTag postTag)
     {
-//        int postId=postService.savePost(post);
-//        //save tags
-//        List<Integer> tagIds=tagService.saveTag(tags);
-//
-//        System.out.println(postId+ "   tag id= "+tagIds);
-//        //save postId and tagID
-//        for(int tagId:tagIds)
-//        {
-//            postTag.setPostId(postId);
-//            postTag.setTagId(tagId);
-//            postAndTagRepository.save(postTag);
-//        }
+        System.out.println("post author ="+post.getAuthor());
+        int postId=postService.savePost(post);
+        //save tags
+        List<Integer> tagIds=tagService.saveTag(tags);
+
+        System.out.println(postId+ "   tag id= "+tagIds);
+        //save postId and tagID
+        for(int tagId:tagIds)
+        {
+            postTag.setPostId(postId);
+            postTag.setTagId(tagId);
+            postAndTagRepository.save(postTag);
+        }
 
         return "redirect:/";
     }
@@ -90,7 +87,7 @@ public class PostController {
     {
         Post post=postService.findPostById(id);
         model.addAttribute("posts",post);
-        System.out.println(post);
+//        System.out.println(post);
         return "fullPost";
     }
 }
