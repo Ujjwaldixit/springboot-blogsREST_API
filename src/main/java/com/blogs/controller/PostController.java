@@ -111,10 +111,10 @@ public class PostController {
     }
 
     @DeleteMapping("/deletePost/{postId}")
-    public String deletePost(@PathVariable("postId")int id)
+    public String deletePost(@PathVariable("postId")int postId)
     {
-        postService.deletePost(id);
-
+        postService.deletePost(postId);
+        postAndTagService.deletePostAndTag(postId);
         return "redirect:/";
     }
 

@@ -17,7 +17,7 @@ public class PostAndTagServiceImpl implements PostAndTagService{
     }
 
     @Override
-    public void deletePostAndTag(int postId, int tagId) {
-
+    public void deletePostAndTag(int postId) {
+        postAndTagRepository.deletePostTag(postId);
     }
 }
