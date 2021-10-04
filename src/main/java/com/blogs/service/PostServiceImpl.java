@@ -37,7 +37,7 @@ public class PostServiceImpl implements PostService{
 
     public int savePost(Post post)
     {
-        //setting createdAt time
+        
         post.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         //setting excerpt
         if(post.getContent().length()>=100)
