@@ -1,12 +1,11 @@
 package com.blogs.controller;
 
 import com.blogs.model.Post;
+import com.blogs.model.PostAndTagIdentity;
 import com.blogs.model.PostTag;
 import com.blogs.model.Tag;
 import com.blogs.repository.PostAndTagRepository;
-import com.blogs.service.PostService;
-import com.blogs.service.TagService;
-import com.blogs.service.UserDetailsImpl;
+import com.blogs.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -15,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -28,7 +28,7 @@ public class PostController {
     @Autowired
     private TagService tagService;
     @Autowired
-    private PostAndTagRepository postAndTagRepository;
+    private PostAndTagService postAndTagService;
 
     @GetMapping("/")
     public String homePage(Model model,
@@ -64,7 +64,6 @@ public class PostController {
     @PostMapping("/savePost")
     public String savePost(@ModelAttribute("post")Post post,@RequestParam("Tags") String tags, PostTag postTag)
     {
-        //
         System.out.println("post author ="+post.getAuthor());
         System.out.println("post="+post);
         int postId=postService.savePost(post);
@@ -74,14 +73,17 @@ public class PostController {
             tagIds = tagService.saveTag(tags);
         }
         System.out.println("postId"+postId+ "   tag id= "+tagIds);
+        postTag.setPostId(postId);
 
-        //save postId and tagID
-        for(int tagId:tagIds)
-        {
-            postTag.setPostId(postId);
-            if(!tags.equals(""))
+        if(tagIds.size()>0) {
+            for (int tagId : tagIds) {
                 postTag.setTagId(tagId);
-            postAndTagRepository.save(postTag);
+                postAndTagService.addPostTag(postTag);
+            }
+        }
+        else{
+            postTag.setTagId(0);
+            postAndTagService.addPostTag(postTag);
         }
         return "redirect:/";
     }
