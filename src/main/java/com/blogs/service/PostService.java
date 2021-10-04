@@ -9,4 +9,5 @@ public interface PostService {
     Page<Post> getAllPosts(int pageNo, int pageSize, String sortBy,String order);
     int savePost(Post post);
     Post findPostById(int id);
+    void deletePost(int id);
 }

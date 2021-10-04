@@ -37,8 +37,6 @@ public class PostServiceImpl implements PostService{
 
     public int savePost(Post post)
     {
-        
-        post.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         //setting excerpt
         if(post.getContent().length()>=100)
         {
@@ -55,5 +53,10 @@ public class PostServiceImpl implements PostService{
     public Post findPostById(int id) {
        Post post= postRepository.getOne(id);
        return post;
+    }
+
+    @Override
+    public void deletePost(int id) {
+        postRepository.deleteById(id);
     }
 }

@@ -8,8 +8,13 @@
 <body>
 
 <div sec:authorize="isAuthenticated()" th:if="${userName}==${posts.author}">
-    <a th:href="@{'/updatePost/'+${posts.id}}">Update post</a>
-    <a th:href="@{/deletePost}">Delete post</a>
+
+    <form th:action="@{'/updatePost/'+${posts.id}}" method="PUT">
+        <button type="submit">Update post</button>
+    </form>
+    <form th:action="@{'/deletePost/'+${posts.id}}" method="DELETE">
+        <button type="submit">Delete post</button>
+    </form>
 </div>
 
 <p>------------------------------------------------------</p>

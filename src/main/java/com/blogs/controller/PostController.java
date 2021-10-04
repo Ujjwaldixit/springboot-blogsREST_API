@@ -10,6 +10,7 @@ import com.blogs.service.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -96,7 +97,7 @@ public class PostController {
         return "fullPost";
     }
 
-    @GetMapping("/updatePost/{postId}")
+    @PutMapping("/updatePost/{postId}")
     public String updatePost(@PathVariable("postId")int id,Model model)
     {
         Post post=postService.findPostById(id);
@@ -105,6 +106,14 @@ public class PostController {
         List<Tag> tags=tagService.getAllTags();
         model.addAttribute("tags",tags);
         return "newPost";
+    }
+
+    @DeleteMapping("/deletePost/{postId}")
+    public String deletePost(@PathVariable("postId")int id)
+    {
+        postService.deletePost(id);
+
+        return "redirect:/";
     }
 
 }
