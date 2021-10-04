@@ -93,4 +93,14 @@ public class PostController {
         return "fullPost";
     }
 
+    @GetMapping("/updatePost/{postId}")
+    public String updatePost(@PathVariable("postId")int id,Model model)
+    {
+        Post post=postService.findPostById(id);
+        model.addAttribute("post",post);
+
+        List<Tag> tags=tagService.getAllTags();
+        model.addAttribute("tags",tags);
+        return "newPost";
+    }
 }
