@@ -8,18 +8,19 @@
 <body>
 <h1>Comments</h1>
 <br>
-    <form th:action="@{'/saveComment/'+${post.id}}" th:oject="${comment}" class="center" method="POST">
+    <form th:action="@{/saveComment}" th:object="${_comment}" class="center" method="POST">
         <label>Name</label>
-        <input required type="text" th:feild="*{name}" placeholder="Enter Name">
+        <input type="text" th:field="*{name}" th:value="${_comment.name}" placeholder="Enter Name" required>
         <br>
         <br>
         <label>Email</label>
-        <input required type="email" th:feild="*{email}" placeholder="Enter email">
+        <input required type="email" th:field="*{email}" th:value="${_comment.email}"  placeholder="Enter email">
         <br>
         <br>
         <label>Comment</label>
-        <input required type="text" th:feild="*{comment}" placeholder="Write Comment">
-        <input type="hidden" th:field="*{postId}" th:value="${post.id}">
+        <input required type="text" th:field="*{comment}" th:value="${_comment.comment}"  placeholder="Write Comment">
+        <input type="text" th:field="*{postId}" th:value="${postId}">
+<!--        <input type="hidden" th:field="*{createdAt}" th:value="${_comment.createdAt}">-->
         <br>
         <br>
         <button type="submit">Submit</button>

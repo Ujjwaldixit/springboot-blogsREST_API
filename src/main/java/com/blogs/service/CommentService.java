@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface CommentService {
-    public void addComment(Comment comment);
+    public void saveComment(Comment comment);
+    public void deleteComment(int commentId);
 
 }

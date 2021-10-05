@@ -25,6 +25,8 @@ public class PostController {
     private TagService tagService;
     @Autowired
     private PostAndTagService postAndTagService;
+    @Autowired
+    private CommentService commentService;
 
     @GetMapping("/")
     public String homePage(Model model,
@@ -85,7 +87,7 @@ public class PostController {
     }
 
     @GetMapping("/fullPost/{postId}")
-    public String displayFullPost(@AuthenticationPrincipal UserDetailsImpl user,@PathVariable("postId") int id,Model model,@ModelAttribute("comment") Comment comment)
+    public String displayFullPost(@AuthenticationPrincipal UserDetailsImpl user,@PathVariable("postId") int id,Model model)
     {
         Post post=postService.findPostById(id);
         model.addAttribute("posts",post);
@@ -113,11 +115,19 @@ public class PostController {
         return "redirect:/";
     }
 
-    @PostMapping("/saveComment/{postId}")
-    public String saveComment(@ModelAttribute("comment")Comment comment,@PathVariable("postId")int postId)
+
+    @GetMapping("/addComment/{postId}")
+    public String addComment(@PathVariable("postId")int postId,Model model,Comment comment)
     {
-        System.out.println(comment);
-        return "";
+        model.addAttribute("_comment",comment);
+        model.addAttribute("postId",postId);
+        return "commentForm";
     }
 
+    @PostMapping("/saveComment")
+    public String saveComment(@ModelAttribute("_comment")Comment comment)
+    {
+        //commentService.saveComment(comment);
+        return "redirect:/fullPost/"+comment.getPostId();
+    }
 }
