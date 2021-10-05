@@ -52,7 +52,6 @@ public class PostController {
         //to set author name
         post.setAuthor(user.getName());
         model.addAttribute("post",post);
-
         List<Tag> tags=tagService.getAllTags();
         model.addAttribute("tags",tags);
         return "/newPost";
@@ -62,17 +61,14 @@ public class PostController {
     @PostMapping("/savePost")
     public String savePost(@ModelAttribute("post")Post post,@RequestParam("Tags") String tags, PostTag postTag)
     {
-        System.out.println("post author ="+post.getAuthor());
-        System.out.println("post="+post);
         int postId=postService.savePost(post);
         //save tags
         List<Integer> tagIds = null;
         if(!tags.equals("")) {
             tagIds = tagService.saveTag(tags);
         }
-        System.out.println("postId"+postId+ "   tag id= "+tagIds);
-        postTag.setPostId(postId);
 
+        postTag.setPostId(postId);
         if(tagIds.size()>0) {
             for (int tagId : tagIds) {
                 postTag.setTagId(tagId);
@@ -106,6 +102,7 @@ public class PostController {
         Post post=postService.findPostById(id);
         model.addAttribute("post",post);
 
+
         List<Tag> tags=tagService.getAllTags();
         model.addAttribute("tags",tags);
         return "newPost";
@@ -115,6 +112,11 @@ public class PostController {
     public String deletePost(@PathVariable("postId")int postId)
     {
         postService.deletePost(postId);
+        List<PostTag> postTags=postAndTagService.getPostTagByPostId(postId);
+        for(PostTag postTag:postTags)
+        {
+            postAndTagService.deletePostTag(postTag);
+        }
         return "redirect:/";
     }
 
