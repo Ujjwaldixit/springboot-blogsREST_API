@@ -143,10 +143,11 @@ public class PostController {
              return "commentForm";
     }
 
-    @GetMapping("/deleteComment/{commentId}")
-    public String deleteComment(@PathVariable("comment")Comment comment,Model model)
+    @GetMapping("/deleteComment/{commentId}/{postId}")
+    public String deleteComment(@PathVariable("commentId")int commentId,@PathVariable("postId")int postID)
     {
-        commentService.deleteComment(comment.getId());
-        return "redirect:/fullPost/"+comment.getPostId();
+        System.out.println("inside delete");
+        commentService.deleteComment(commentId);
+        return "redirect:/fullPost/"+postID;
     }
 }

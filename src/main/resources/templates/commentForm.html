@@ -19,8 +19,8 @@
         <br>
         <label>Comment</label>
         <input required type="text" th:field="*{comment}" th:value="${_comment.comment}"  placeholder="Write Comment">
-        <input type="text" th:field="*{postId}" th:value="${postId}">
-        <input type="text" th:field="*{id}" th:value="${_comment.id}">
+        <input type="hidden" th:field="*{postId}" th:value="${postId}">
+        <input type="hidden" th:field="*{id}" th:value="${_comment.id}">
         <div th:if="${_comment.createdAt}!=null">
             <input type="hidden" th:field="*{createdAt}" th:value="${_comment.createdAt}">
         </div>
