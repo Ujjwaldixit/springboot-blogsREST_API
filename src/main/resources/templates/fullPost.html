@@ -25,23 +25,6 @@
     <h3 th:text="${post.content}">
     </h3>
     <p>------------------------------------------------------</p>
-    <h1>Comment</h1>
-    <br>
-    <form th:action="@{/saveComment}" class="center" method="POST">
-        <label>Name</label>
-        <input required type="text" placeholder="Enter Name">
-        <br>
-        <br>
-        <label>Email</label>
-        <input required type="email" placeholder="Enter email">
-        <br>
-        <br>
-        <label>Comment</label>
-        <input required type="text" placeholder="Write Comment">
-        <br>
-        <br>
-        <button type="submit">Submit</button>
-    </form>
     <br>
 
 </div>

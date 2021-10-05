@@ -16,11 +16,12 @@ import java.sql.Timestamp;
 @Table(name="comment",schema = "blog")
 public class Comment {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
     private String email;
     private String comment;
+    private int postId;
 
     @CreationTimestamp
     private Timestamp createdAt;

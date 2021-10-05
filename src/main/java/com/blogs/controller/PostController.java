@@ -1,9 +1,6 @@
 package com.blogs.controller;
 
-import com.blogs.model.Post;
-import com.blogs.model.PostAndTagIdentity;
-import com.blogs.model.PostTag;
-import com.blogs.model.Tag;
+import com.blogs.model.*;
 import com.blogs.repository.PostAndTagRepository;
 import com.blogs.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,7 +85,7 @@ public class PostController {
     }
 
     @GetMapping("/fullPost/{postId}")
-    public String displayFullPost(@AuthenticationPrincipal UserDetailsImpl user,@PathVariable("postId") int id,Model model)
+    public String displayFullPost(@AuthenticationPrincipal UserDetailsImpl user,@PathVariable("postId") int id,Model model,@ModelAttribute("comment") Comment comment)
     {
         Post post=postService.findPostById(id);
         model.addAttribute("posts",post);
@@ -114,6 +111,13 @@ public class PostController {
     {
         postService.deletePost(postId);
         return "redirect:/";
+    }
+
+    @PostMapping("/saveComment/{postId}")
+    public String saveComment(@ModelAttribute("comment")Comment comment,@PathVariable("postId")int postId)
+    {
+        System.out.println(comment);
+        return "";
     }
 
 }

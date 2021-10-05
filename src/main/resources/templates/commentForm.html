@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8">
+    <title>Comment</title>
+</head>
+<body>
+<h1>Comments</h1>
+<br>
+    <form th:action="@{'/saveComment/'+${post.id}}" th:oject="${comment}" class="center" method="POST">
+        <label>Name</label>
+        <input required type="text" th:feild="*{name}" placeholder="Enter Name">
+        <br>
+        <br>
+        <label>Email</label>
+        <input required type="email" th:feild="*{email}" placeholder="Enter email">
+        <br>
+        <br>
+        <label>Comment</label>
+        <input required type="text" th:feild="*{comment}" placeholder="Write Comment">
+        <input type="hidden" th:field="*{postId}" th:value="${post.id}">
+        <br>
+        <br>
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
