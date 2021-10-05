@@ -25,14 +25,17 @@ public class PostController {
 
     @GetMapping("/")
     public String homePage(@RequestParam(value = "start",defaultValue = "0") int pageNo,
-                           @RequestParam(value= "limit",defaultValue = "5") int pageSize,
+                           @RequestParam(value= "limit",defaultValue = "3") int pageSize,
                            @RequestParam(value = "sortField",defaultValue = "publishedAt")String sortField,
                            @RequestParam(value = "order",defaultValue = "asc")String sortOrder,
                            Model model)
     {
         System.out.println("page ="+pageNo+" "+pageSize);
-        List<Post> posts= postService.findPostWithPaginationAndSorting(pageNo,pageSize,sortField,sortOrder).toList();
+        Page<Post> _posts= postService.findPostWithPaginationAndSorting(pageNo,pageSize,sortField,sortOrder);
+        List<Post> posts=_posts.toList();
         model.addAttribute("posts", posts);
+        model.addAttribute("totalPages",_posts.getTotalPages());
+        model.addAttribute("limit",pageSize);
         return "index";
     }
 
