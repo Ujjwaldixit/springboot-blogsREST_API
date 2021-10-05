@@ -1,17 +1,12 @@
 package com.blogs.controller;
-
 import com.blogs.model.*;
-import com.blogs.repository.PostAndTagRepository;
 import com.blogs.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -29,14 +24,23 @@ public class PostController {
     private CommentService commentService;
 
     @GetMapping("/")
-    public String homePage(Model model)
+    public String homePage(@RequestParam(value = "start",defaultValue = "1") int pageNo,
+                           @RequestParam(value= "limit",defaultValue = "5") int pageSize,
+                           @RequestParam(name = "sortField",required = false)String sortField,
+                           @RequestParam(name = "order",required =false)String sortOrder,
+                           Model model)
     {
-        //System.out.println("order="+order);
-        List<Post> posts=postService.getAllPosts();
+        List<Post> posts=null;
+        if(sortField!=null&&sortOrder!=null)
+        {
+            posts=postService.findPostBySortingField(sortField,sortOrder);
+        }
+        else{
+             posts=  postService.findPostWithPagination(pageNo,pageSize).toList();
+        }
         model.addAttribute("posts", posts);
         return "index";
     }
-
 
     @GetMapping("/showNewPostForm")
     public String newPost(@AuthenticationPrincipal UserDetailsImpl user, Model model,Post post)

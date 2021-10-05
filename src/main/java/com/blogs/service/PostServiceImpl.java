@@ -5,11 +5,11 @@ import com.blogs.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
-import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 
@@ -49,4 +49,21 @@ public class PostServiceImpl implements PostService{
     public void deletePost(int id) {
         postRepository.deleteById(id);
     }
+
+    @Override
+    public List<Post> findPostBySortingField(String sortingField,String sortingOrder) {
+       if(sortingOrder.equals("asc")||sortingOrder.equals("ASC")||sortingOrder.equals("Asc"))
+             return postRepository.findAll(Sort.by(Sort.Direction.ASC,sortingField));
+        return postRepository.findAll(Sort.by(Sort.Direction.DESC,sortingField));
+
+    }
+
+    @Override
+    public Page<Post> findPostWithPagination(int page, int pageSize) {
+             page=page/pageSize;
+        return postRepository.findAll(PageRequest.of(page,pageSize));
+
+    }
+
+
 }
