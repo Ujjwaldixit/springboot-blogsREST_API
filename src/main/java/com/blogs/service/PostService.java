@@ -12,6 +12,5 @@ public interface PostService {
     int savePost(Post post);
     Post findPostById(int id);
     void deletePost(int id);
-    List<Post> findPostBySortingField(String sortingField,String sortingOrder);
-    Page<Post> findPostWithPagination(int page,int pageSize);
+    Page<Post> findPostWithPaginationAndSorting(int page, int pageSize,String sortingField,String sortingOrder);
 }

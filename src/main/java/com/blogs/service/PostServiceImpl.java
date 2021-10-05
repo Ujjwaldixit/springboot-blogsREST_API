@@ -51,17 +51,11 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public List<Post> findPostBySortingField(String sortingField,String sortingOrder) {
-       if(sortingOrder.equals("asc")||sortingOrder.equals("ASC")||sortingOrder.equals("Asc"))
-             return postRepository.findAll(Sort.by(Sort.Direction.ASC,sortingField));
-        return postRepository.findAll(Sort.by(Sort.Direction.DESC,sortingField));
-
-    }
-
-    @Override
-    public Page<Post> findPostWithPagination(int page, int pageSize) {
-             page=page/pageSize;
-        return postRepository.findAll(PageRequest.of(page,pageSize));
+    public Page<Post> findPostWithPaginationAndSorting(int page, int pageSize,String sortingField,String sortingOrder) {
+        page=page/pageSize;
+        if(sortingOrder.equals("asc")||sortingOrder.equals("ASC")||sortingOrder.equals("Asc"))
+            return postRepository.findAll(PageRequest.of(page,pageSize).withSort(Sort.by(Sort.Direction.ASC,sortingField)));
+        return postRepository.findAll(PageRequest.of(page,pageSize).withSort(Sort.by(Sort.Direction.DESC,sortingField)));
 
     }
 

@@ -24,20 +24,14 @@ public class PostController {
     private CommentService commentService;
 
     @GetMapping("/")
-    public String homePage(@RequestParam(value = "start",defaultValue = "1") int pageNo,
+    public String homePage(@RequestParam(value = "start",defaultValue = "0") int pageNo,
                            @RequestParam(value= "limit",defaultValue = "5") int pageSize,
-                           @RequestParam(name = "sortField",required = false)String sortField,
-                           @RequestParam(name = "order",required =false)String sortOrder,
+                           @RequestParam(value = "sortField",defaultValue = "publishedAt")String sortField,
+                           @RequestParam(value = "order",defaultValue = "asc")String sortOrder,
                            Model model)
     {
-        List<Post> posts=null;
-        if(sortField!=null&&sortOrder!=null)
-        {
-            posts=postService.findPostBySortingField(sortField,sortOrder);
-        }
-        else{
-             posts=  postService.findPostWithPagination(pageNo,pageSize).toList();
-        }
+        System.out.println("page ="+pageNo+" "+pageSize);
+        List<Post> posts= postService.findPostWithPaginationAndSorting(pageNo,pageSize,sortField,sortOrder).toList();
         model.addAttribute("posts", posts);
         return "index";
     }
