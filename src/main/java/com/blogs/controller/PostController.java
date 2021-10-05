@@ -87,13 +87,16 @@ public class PostController {
     }
 
     @GetMapping("/fullPost/{postId}")
-    public String displayFullPost(@AuthenticationPrincipal UserDetailsImpl user,@PathVariable("postId") int id,Model model)
+    public String displayFullPost(@AuthenticationPrincipal UserDetailsImpl user,@PathVariable("postId") int postId,Model model)
     {
-        Post post=postService.findPostById(id);
+        Post post=postService.findPostById(postId);
         model.addAttribute("posts",post);
+        List<Comment> comments=commentService.getCommentByPostId(postId);
+        model.addAttribute("comments",comments);
+
         if(user!=null)
             model.addAttribute("userName",user.getName());
-//        System.out.println(post);
+
         return "fullPost";
     }
 
@@ -127,7 +130,23 @@ public class PostController {
     @PostMapping("/saveComment")
     public String saveComment(@ModelAttribute("_comment")Comment comment)
     {
-        //commentService.saveComment(comment);
+
+        commentService.saveComment(comment);
+        return "redirect:/fullPost/"+comment.getPostId();
+    }
+
+    @GetMapping("/updateComment/{commentId}")
+    public String updateComment(@PathVariable("commentId")int commentId,Model model)
+    {
+             Comment comment=commentService.getCommentById(commentId);
+             model.addAttribute("_comment",comment);
+             return "commentForm";
+    }
+
+    @GetMapping("/deleteComment/{commentId}")
+    public String deleteComment(@PathVariable("comment")Comment comment,Model model)
+    {
+        commentService.deleteComment(comment.getId());
         return "redirect:/fullPost/"+comment.getPostId();
     }
 }

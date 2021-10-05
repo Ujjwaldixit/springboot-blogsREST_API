@@ -22,15 +22,28 @@
     <h1 th:text="${post.title}"></h1>
     <h2 th:text="${post.author}"></h2>
     <h4 th:text="${post.createdAt}"></h4>
-    <h3 th:text="${post.content}">
-    </h3>
+    <h3 th:text="${post.content}"></h3>
     <p>------------------------------------------------------</p>
     <br>
 
-
     <a th:href="@{'/addComment/'+${posts.id}}">Add Comments</a>
-    <h1>Comments</h1>
-
 </div>
+
+<h1>Comments</h1>
+<p>------------------------------------------------------</p>
+<div th:each="comment :${comments}">
+    <h5 th:text="'By-'+${comment.name}"></h5>
+    <h2 th:text="${comment.comment}"></h2>
+    <h5 th:text="'commented at-'+${comment.createdAt}"></h5>
+
+    <div sec:authorize="isAuthenticated()" th:if="${userName}==${posts.author}">
+           <a th:href="@{'/updateComment/'+${comment.id}}">Update Comment</a>
+           <a th:href="@{'/deleteComment/'+${comment}}">Delete Comment</a>
+    </div>
+    <p>------------------------------------------------------</p>
+</div>
+
+
+
 </body>
 </html>
