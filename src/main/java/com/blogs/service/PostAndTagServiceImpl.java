@@ -4,9 +4,12 @@ import com.blogs.model.PostAndTagIdentity;
 import com.blogs.model.PostTag;
 import com.blogs.repository.PostAndTagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import java.util.List;
+import javax.transaction.Transactional;
 
+@Service
+@Transactional
 public class PostAndTagServiceImpl implements PostAndTagService{
     @Autowired
     private PostAndTagRepository postAndTagRepository;
@@ -16,8 +19,5 @@ public class PostAndTagServiceImpl implements PostAndTagService{
         postAndTagRepository.save(postTag);
     }
 
-    @Override
-    public void deletePostAndTag(int postId) {
-        postAndTagRepository.deletePostTag(postId);
-    }
+
 }

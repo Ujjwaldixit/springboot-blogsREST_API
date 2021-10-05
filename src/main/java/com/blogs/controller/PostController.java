@@ -22,7 +22,6 @@ import java.util.List;
 public class PostController {
 
     //display post in index.html
-
     @Autowired
     private PostService postService;
     @Autowired
@@ -99,7 +98,7 @@ public class PostController {
         return "fullPost";
     }
 
-    @PutMapping("/updatePost/{postId}")
+    @GetMapping("/updatePost/{postId}")
     public String updatePost(@PathVariable("postId")int id,Model model)
     {
         Post post=postService.findPostById(id);
@@ -110,11 +109,10 @@ public class PostController {
         return "newPost";
     }
 
-    @DeleteMapping("/deletePost/{postId}")
+    @GetMapping("/deletePost/{postId}")
     public String deletePost(@PathVariable("postId")int postId)
     {
         postService.deletePost(postId);
-        postAndTagService.deletePostAndTag(postId);
         return "redirect:/";
     }
 

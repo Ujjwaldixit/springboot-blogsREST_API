@@ -7,6 +7,4 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface PostAndTagRepository extends JpaRepository<PostTag, PostAndTagIdentity> {
-@Query("Delete u from post_tag where u.post_id=:postId")
-    public void deletePostTag(@Param("postId")int id);
 }
