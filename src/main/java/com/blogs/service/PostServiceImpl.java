@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 
@@ -56,7 +57,16 @@ public class PostServiceImpl implements PostService{
         if(sortingOrder.equals("asc")||sortingOrder.equals("ASC")||sortingOrder.equals("Asc"))
             return postRepository.findAll(PageRequest.of(page,pageSize).withSort(Sort.by(Sort.Direction.ASC,sortingField)));
         return postRepository.findAll(PageRequest.of(page,pageSize).withSort(Sort.by(Sort.Direction.DESC,sortingField)));
+    }
 
+    @Override
+    public List<Post> findAllLike(String keyword) {
+        List<Post> post= postRepository.findByExcerptLike(keyword);
+        post.addAll(postRepository.findByAuthorLike(keyword));
+        post.addAll(postRepository.findByTitleLike(keyword));
+        post.addAll(postRepository.findByContentLike(keyword));
+        HashSet<Post> posts=new HashSet<>(post);
+        return new ArrayList<>(posts);
     }
 
 

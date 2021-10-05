@@ -25,14 +25,22 @@ public class PostController {
 
     @GetMapping("/")
     public String homePage(@RequestParam(value = "start",defaultValue = "0") int pageNo,
-                           @RequestParam(value= "limit",defaultValue = "3") int pageSize,
+                           @RequestParam(value= "limit",defaultValue = "10") int pageSize,
                            @RequestParam(value = "sortField",defaultValue = "publishedAt")String sortField,
                            @RequestParam(value = "order",defaultValue = "asc")String sortOrder,
+                           @RequestParam(value = "search",required = false) String searchKeyword,
                            Model model)
     {
+
         System.out.println("page ="+pageNo+" "+pageSize);
         Page<Post> _posts= postService.findPostWithPaginationAndSorting(pageNo,pageSize,sortField,sortOrder);
         List<Post> posts=_posts.toList();
+        System.out.println("search= "+searchKeyword);
+        if(searchKeyword!=null)
+        {
+            posts=postService.findAllLike(searchKeyword);
+        }
+        System.out.println("posts==="+pageNo);
         model.addAttribute("posts", posts);
         model.addAttribute("totalPages",_posts.getTotalPages());
         model.addAttribute("limit",pageSize);
@@ -111,7 +119,6 @@ public class PostController {
         }
         return "redirect:/";
     }
-
 
     @GetMapping("/addComment/{postId}")
     public String addComment(@PathVariable("postId")int postId,Model model,Comment comment)

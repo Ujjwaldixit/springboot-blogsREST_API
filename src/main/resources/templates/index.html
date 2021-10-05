@@ -11,6 +11,14 @@
     <a th:href="@{/showNewPostForm}">Add Post</a>
     <a th:href="@{/register}">Register User</a>
 
+    <span>
+        <label>Search</label>
+        <form th:action="@{/?search=}">
+            <input type="text" placeholder="Search">
+            <button type="submit">Search</button>
+        </form>
+    </span>
+
     <br>
     <p>------------------------------------------------------</p>
     <div th:each="post :${posts}">
