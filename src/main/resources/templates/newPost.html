@@ -35,6 +35,7 @@
         <div th:if="${post.createdAt}!=null">
             <input type="hidden" th:field="*{createdAt}" th:value="${post.createdAt}">
         </div>
+
         <input type="hidden" th:field="*{author}" th:value="${post.author}" required>
         <input type="hidden" th:field="*{id}" th:value="${post.id}" required>
 

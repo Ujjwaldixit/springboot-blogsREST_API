@@ -29,18 +29,10 @@ public class PostController {
     private CommentService commentService;
 
     @GetMapping("/")
-    public String homePage(Model model,
-                           @RequestParam(name="start",defaultValue = "0",required = false) int pageNo,
-                           @RequestParam(name="limit",defaultValue ="10",required = false) int pageSize,
-                           @RequestParam(name="sortField",defaultValue = "id",required = false)String sortBy,
-                           @RequestParam(name="order",defaultValue="null",required = false) String order
-    )
+    public String homePage(Model model)
     {
         //System.out.println("order="+order);
-        Page<Post> page=postService.getAllPosts(pageNo,pageSize,sortBy,order);
-        List<Post> posts=page.getContent();
-        model.addAttribute("currentPage", pageNo);
-        model.addAttribute("totalPages", page.getTotalPages());
+        List<Post> posts=postService.getAllPosts();
         model.addAttribute("posts", posts);
         return "index";
     }
@@ -101,7 +93,6 @@ public class PostController {
     {
         Post post=postService.findPostById(id);
         model.addAttribute("post",post);
-
 
         List<Tag> tags=tagService.getAllTags();
         model.addAttribute("tags",tags);
