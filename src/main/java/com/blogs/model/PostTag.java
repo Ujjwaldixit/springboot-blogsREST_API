@@ -13,17 +13,19 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="post_tag",schema = "blog")
+@Table(name = "post_tag", schema = "blog")
 @IdClass(PostAndTagIdentity.class)
 public class PostTag {
 
     @Id
-   private int postId;
+    private int postId;
+
     @Id
-   private int tagId;
+    private int tagId;
 
     @CreationTimestamp
     private Timestamp createdAt;
+
     @UpdateTimestamp
     private Timestamp updatedAt;
 }

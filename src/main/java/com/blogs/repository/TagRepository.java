@@ -7,8 +7,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface TagRepository extends JpaRepository<Tag,Integer> {
+public interface TagRepository extends JpaRepository<Tag, Integer> {
     Tag findByName(String tagName);
+
     List<Tag> findByNameLike(String keyword);
 
 }

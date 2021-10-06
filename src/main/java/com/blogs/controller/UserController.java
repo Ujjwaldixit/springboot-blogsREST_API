@@ -10,45 +10,30 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-
 @Controller
 public class UserController {
     @Autowired
     private UserService userService;
 
     @GetMapping("/register")
-    public String showRegistrationForm(Model model)
-    {
-        model.addAttribute("user",new User());
+    public String showRegistrationForm(Model model) {
+        model.addAttribute("user", new User());
         return "registrationForm";
     }
 
-    @PostMapping("/registerUser")
-    public String registerUser(@ModelAttribute("user")User user, RedirectAttributes redirectAttributes)
-    {
-        System.out.println(user.getName()+" "+user.getEmail()+" "+user.getPassword()+" "+user.getRole());
-        boolean checkRegistered=userService.register(user);
-        if(checkRegistered) {
-            redirectAttributes.addFlashAttribute("success","!!! Registered Successfully !!!");
-        }
-        else {
-            redirectAttributes.addFlashAttribute("error","!!! Already Registered !!!");
+    @PostMapping("/register")
+    public String registerUser(@ModelAttribute("user") User user, RedirectAttributes redirectAttributes) {
+        boolean checkRegistered = userService.register(user);
+        if (checkRegistered) {
+            redirectAttributes.addFlashAttribute("success", "!!! Registered Successfully !!!");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "!!! Already Registered !!!");
         }
         return "redirect:/register";
     }
 
     @GetMapping("/login")
-    public String login()
-    {
-        System.out.println("Inside Login");
+    public String login() {
         return "loginForm";
     }
-
-    @PostMapping("/loginUser")
-    public void loginUser()
-    {
-        System.out.println("Logging user");
-    }
-
-
 }

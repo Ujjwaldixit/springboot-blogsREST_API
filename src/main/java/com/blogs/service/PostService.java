@@ -11,12 +11,22 @@ import java.util.List;
 @Service
 public interface PostService {
     List<Post> getAllPosts();
-    int savePost(Post post);
+
+    Post savePost(Post post);
+
     Post findPostById(int id);
+
     void deletePost(int id);
-    Page<Post> findPostWithPaginationAndSorting(int page, int pageSize,String sortingField,String sortingOrder);
-    List<Post> findAllLike(String keyword);
-    List<Post> findPostByPostTag(List<PostTag> postTags);
-    List<Post> findPostByAuthor(String author);
-    List<Post> findPostByPublishedAt(Timestamp publishedAt);
+
+    int findPostIdByPost(Post post);
+
+    Page<Post> findPostsWithPaginationAndSorting(int page, int pageSize, String sortingField, String sortingOrder);
+
+    List<Post> findPostsByKeyword(String keyword);
+
+    List<Post> findPostsByPostTag(List<PostTag> postTags);
+
+    List<Post> findPostsByAuthor(String author);
+
+    List<Post> findPostsByPublishedAt(Timestamp publishedAt);
 }

@@ -3,20 +3,17 @@ package com.blogs.controller;
 import com.blogs.model.*;
 import com.blogs.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @Controller
 public class PostController {
-
-    //display post in index.html
     @Autowired
     private PostService postService;
     @Autowired
@@ -32,52 +29,43 @@ public class PostController {
                            @RequestParam(value = "sortField", defaultValue = "publishedAt") String sortField,
                            @RequestParam(value = "order", defaultValue = "asc") String sortOrder,
                            @RequestParam(value = "search", required = false) String searchKeyword,
-                           @RequestParam(value = "author",required = false) String author,
+                           @RequestParam(value = "author", required = false) String author,
                            @RequestParam(value = "tag", required = false) String tag,
-                           @RequestParam(value = "publishedAt",required = false) Timestamp publishedAt,
+                           @RequestParam(value = "publishedAt", required = false) Timestamp publishedAt,
                            Model model) {
 
-        Page<Post> _posts = postService.findPostWithPaginationAndSorting(pageNo, pageSize, sortField, sortOrder);
-        List<Post> posts = _posts.toList();
-
-        //for searching
+        List<Post> posts = postService.findPostsWithPaginationAndSorting(pageNo, pageSize, sortField, sortOrder).toList();
         if (searchKeyword != null) {
-            posts = postService.findAllLike(searchKeyword);
+            posts = postService.findPostsByKeyword(searchKeyword);
             if (posts.size() == 0) {
                 List<Tag> tags = tagService.findByNameLike(searchKeyword);
                 if (tags != null) {
                     List<PostTag> postTags = postAndTagService.getPostTagByTags(tags);
-                    posts = postService.findPostByPostTag(postTags);
+                    posts = postService.findPostsByPostTag(postTags);
                 }
             }
         }
 
-        // for filtering
-        if(author!=null||tag!=null||publishedAt!=null)
-        {
-            posts=new ArrayList<>();
-            if(author!=null)
-            {
-               posts.addAll(postService.findPostByAuthor(author));
+        if (author != null || tag != null || publishedAt != null) {
+            posts = new ArrayList<>();
+            if (author != null) {
+                posts.addAll(postService.findPostsByAuthor(author));
             }
-            if(publishedAt!=null)
-            {
-                posts.addAll(postService.findPostByPublishedAt(publishedAt));
+            if (publishedAt != null) {
+                posts.addAll(postService.findPostsByPublishedAt(publishedAt));
             }
-            if(tag!=null)
-            {
+            if (tag != null) {
                 List<Tag> tags = tagService.findByNameLike(tag);
                 if (tags != null) {
                     List<PostTag> postTags = postAndTagService.getPostTagByTags(tags);
-                    posts.addAll(postService.findPostByPostTag(postTags));
+                    posts.addAll(postService.findPostsByPostTag(postTags));
                 }
             }
         }
 
-
         model.addAttribute("posts", posts);
-        model.addAttribute("totalPages", _posts.getTotalPages());
-        model.addAttribute("start",pageNo);
+        model.addAttribute("totalPages", posts);
+        model.addAttribute("start", pageNo);
         model.addAttribute("limit", pageSize);
         model.addAttribute("keyword", searchKeyword);
         return "index";
@@ -85,7 +73,6 @@ public class PostController {
 
     @GetMapping("/showNewPostForm")
     public String newPost(@AuthenticationPrincipal UserDetailsImpl user, Model model, Post post) {
-        //to set author name
         post.setAuthor(user.getName());
         model.addAttribute("post", post);
         List<Tag> tags = tagService.getAllTags();
@@ -93,12 +80,12 @@ public class PostController {
         return "/newPost";
     }
 
-    //save post and tags to database
     @PostMapping("/savePost")
     public String savePost(@ModelAttribute("post") Post post, @RequestParam("Tags") String tags, PostTag postTag) {
-        int postId = postService.savePost(post);
+        post=postService.savePost(post);
+        int postId=postService
         List<Integer> tagIds = new ArrayList<>();
-        if (!tags.equals("")) {
+        if (tags.length()>0) {
             tagIds = tagService.saveTag(tags);
         }
 
@@ -170,7 +157,6 @@ public class PostController {
 
     @GetMapping("/deleteComment/{commentId}/{postId}")
     public String deleteComment(@PathVariable("commentId") int commentId, @PathVariable("postId") int postID) {
-        System.out.println("inside delete");
         commentService.deleteComment(commentId);
         return "redirect:/fullPost/" + postID;
     }

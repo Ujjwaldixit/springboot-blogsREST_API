@@ -13,7 +13,7 @@ import java.util.List;
 
 @Service
 @Transactional
-public class PostAndTagServiceImpl implements PostAndTagService{
+public class PostAndTagServiceImpl implements PostAndTagService {
     @Autowired
     private PostAndTagRepository postAndTagRepository;
 
@@ -34,15 +34,11 @@ public class PostAndTagServiceImpl implements PostAndTagService{
 
     @Override
     public List<PostTag> getPostTagByTags(List<Tag> tags) {
-        List<PostTag> postTags=new ArrayList<>();
-        for(Tag tag:tags)
-        {
-         postTags.addAll(postAndTagRepository.getPostTagByTagId(tag.getId()));
+        List<PostTag> postTags = new ArrayList<>();
+        for (Tag tag : tags) {
+            postTags.addAll(postAndTagRepository.getPostTagByTagId(tag.getId()));
         }
 
         return postTags;
     }
-
-
-
 }

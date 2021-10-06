@@ -12,7 +12,10 @@ import java.util.List;
 @Service
 public interface PostAndTagService {
     void addPostTag(PostTag postTag);
+
     List<PostTag> getPostTagByPostId(int postId);
+
     void deletePostTag(PostTag postAndTag);
+
     List<PostTag> getPostTagByTags(List<Tag> tag);
 }

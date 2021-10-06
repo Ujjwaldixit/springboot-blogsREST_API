@@ -7,45 +7,40 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
+
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-
 @Service
 @Transactional
-public class PostServiceImpl implements PostService{
+public class PostServiceImpl implements PostService {
     @Autowired
     private PostRepository postRepository;
 
     @Override
     public List<Post> getAllPosts() {
-        List<Post> posts=postRepository.findAll();
-        return posts;
+        return postRepository.findAll();
     }
 
-    public int savePost(Post post)
-    {
+    public Post savePost(Post post) {
         post.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-        if(post.getContent().length()>=100)
-        {
-            post.setExcerpt(post.getContent().substring(0,90));
-        }
-        else{
+        if (post.getContent().length() >= 100) {
+            post.setExcerpt(post.getContent().substring(0, 90));
+        } else {
             post.setExcerpt(post.getContent());
         }
-        this.postRepository.save(post);
-        return post.getId();
+        return this.postRepository.save(post);
+
     }
 
     @Override
     public Post findPostById(int id) {
-       Post post= postRepository.getOne(id);
-       return post;
+        return postRepository.getOne(id);
     }
 
     @Override
@@ -54,52 +49,44 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public Page<Post> findPostWithPaginationAndSorting(int page, int pageSize,String sortingField,String sortingOrder) {
-        page=page/pageSize;
-        if(sortingOrder.equals("asc")||sortingOrder.equals("ASC")||sortingOrder.equals("Asc"))
-            return postRepository.findAll(PageRequest.of(page,pageSize).withSort(Sort.by(Sort.Direction.ASC,sortingField)));
-        return postRepository.findAll(PageRequest.of(page,pageSize).withSort(Sort.by(Sort.Direction.DESC,sortingField)));
-    }
-
-//    public Page<Post> findPostWithPagination(int page, int pageSize) {
-//        page = page / pageSize;
-//        return postRepository.findAll(PageRequest.of(page, pageSize));
-//    }
-//
-//    public Page<Post> findPostWithSorting(String sortingField,String sortingOrder) {
-//        page=page/pageSize;
-//        if(sortingOrder.equals("asc")||sortingOrder.equals("ASC")||sortingOrder.equals("Asc"))
-//            return postRepository.findAll(PageRequest.of(page,pageSize).withSort(Sort.by(Sort.Direction.ASC,sortingField)));
-//        return postRepository.findAll(PageRequest.of(page,pageSize).withSort(Sort.by(Sort.Direction.DESC,sortingField)));
-//    }
-
-    @Override
-    public List<Post> findAllLike(String keyword) {
-        List<Post> post= postRepository.findByExcerptLike(keyword);
-        post.addAll(postRepository.findByAuthorLike(keyword));
-        post.addAll(postRepository.findByTitleLike(keyword));
-        post.addAll(postRepository.findByContentLike(keyword));
-        HashSet<Post> posts=new HashSet<>(post);
-        return new ArrayList<>(posts);
+    public int findPostIdByPost(Post post) {
+        return postRepository.findPostIdByPost(post);
     }
 
     @Override
-    public List<Post> findPostByPostTag(List<PostTag> postTags) {
-        List<Post> posts=new ArrayList<>();
-        for(PostTag postTag:postTags)
-        {
+    public Page<Post> findPostsWithPaginationAndSorting(int page, int pageSize, String sortingField, String sortingOrder) {
+        page = page / pageSize;
+        if (sortingOrder.equals("asc") || sortingOrder.equals("ASC") || sortingOrder.equals("Asc"))
+            return postRepository.findAll(PageRequest.of(page, pageSize).withSort(Sort.by(Sort.Direction.ASC, sortingField)));
+        return postRepository.findAll(PageRequest.of(page, pageSize).withSort(Sort.by(Sort.Direction.DESC, sortingField)));
+    }
+
+    @Override
+    public List<Post> findPostsByKeyword(String keyword) {
+        List<Post> posts = postRepository.findByExcerptLike(keyword);
+        posts.addAll(postRepository.findByAuthorLike(keyword));
+        posts.addAll(postRepository.findByTitleLike(keyword));
+        posts.addAll(postRepository.findByContentLike(keyword));
+        HashSet<Post> uniquePosts = new HashSet<>(posts);
+        return new ArrayList<>(uniquePosts);
+    }
+
+    @Override
+    public List<Post> findPostsByPostTag(List<PostTag> postTags) {
+        List<Post> posts = new ArrayList<>();
+        for (PostTag postTag : postTags) {
             posts.add(postRepository.getOne(postTag.getPostId()));
         }
         return posts;
     }
 
     @Override
-    public List<Post> findPostByAuthor(String author) {
+    public List<Post> findPostsByAuthor(String author) {
         return postRepository.findPostByAuthor(author);
     }
 
     @Override
-    public List<Post> findPostByPublishedAt(Timestamp publishedAt) {
+    public List<Post> findPostsByPublishedAt(Timestamp publishedAt) {
         return postRepository.findPostByPublishedAt(publishedAt);
     }
 }

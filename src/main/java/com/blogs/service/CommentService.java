@@ -7,8 +7,11 @@ import java.util.List;
 
 @Service
 public interface CommentService {
-    public void saveComment(Comment comment);
-    public void deleteComment(int commentId);
-    public List<Comment> getCommentByPostId(int postId);
-    public Comment getCommentById(int commentId);
+    void saveComment(Comment comment);
+
+    void deleteComment(int commentId);
+
+    List<Comment> getCommentByPostId(int postId);
+
+    Comment getCommentById(int commentId);
 }

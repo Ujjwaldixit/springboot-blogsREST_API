@@ -7,23 +7,19 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
     @Override
     public boolean register(User user) {
-        if(user!=null &&!userRepository.existsById(user.getEmail()))
-        {
+        if (user != null && !userRepository.existsById(user.getEmail())) {
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
             String encodedPassword = passwordEncoder.encode(user.getPassword());
             user.setPassword(encodedPassword);
             userRepository.save(user);
-            System.out.println("Registered");
             return true;
-        }
-        else{
-            System.out.println("not registered");
+        } else {
             return false;
         }
     }

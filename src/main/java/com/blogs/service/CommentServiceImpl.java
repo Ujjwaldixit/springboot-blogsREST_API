@@ -8,10 +8,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class CommentServiceImpl implements  CommentService{
+public class CommentServiceImpl implements CommentService {
 
     @Autowired
     private CommentRepository commentRepository;
+
     @Override
     public void saveComment(Comment comment) {
         commentRepository.save(comment);
@@ -24,9 +25,8 @@ public class CommentServiceImpl implements  CommentService{
 
     @Override
     public List<Comment> getCommentByPostId(int postId) {
-        List<Comment> comments=commentRepository.getCommentByPostId(postId);
-        System.out.println(comments);
-        return comments;
+       return commentRepository.getCommentByPostId(postId);
+
     }
 
     @Override
