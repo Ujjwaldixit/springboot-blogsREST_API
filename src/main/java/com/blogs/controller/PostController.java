@@ -83,7 +83,7 @@ public class PostController {
     @PostMapping("/savePost")
     public String savePost(@ModelAttribute("post") Post post, @RequestParam("Tags") String tags, PostTag postTag) {
         post=postService.savePost(post);
-        int postId=postService
+        int postId=postService.findPostIdByPost(post);
         List<Integer> tagIds = new ArrayList<>();
         if (tags.length()>0) {
             tagIds = tagService.saveTag(tags);
