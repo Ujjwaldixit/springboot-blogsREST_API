@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface PostAndTagRepository extends JpaRepository<PostTag, PostAndTagIdentity> {
     List<PostTag> getPostTagByPostId(int postId);
+    List<PostTag> getPostTagByTagId(int tagId);
 }

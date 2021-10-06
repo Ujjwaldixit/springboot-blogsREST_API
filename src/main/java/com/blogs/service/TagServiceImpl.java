@@ -45,6 +45,11 @@ public class TagServiceImpl implements TagService{
         }
         return tagIds;
     }
+
+    @Override
+    public List<Tag> findByNameLike(String keyword) {
+        return tagRepository.findByNameLike(keyword);
+    }
 }
 
 

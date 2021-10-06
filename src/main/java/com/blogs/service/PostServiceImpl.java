@@ -1,6 +1,7 @@
 package com.blogs.service;
 
 import com.blogs.model.Post;
+import com.blogs.model.PostTag;
 import com.blogs.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -70,5 +71,13 @@ public class PostServiceImpl implements PostService{
         return new ArrayList<>(posts);
     }
 
-
+    @Override
+    public List<Post> findPostByPostTag(List<PostTag> postTags) {
+        List<Post> posts=new ArrayList<>();
+        for(PostTag postTag:postTags)
+        {
+            posts.add(postRepository.getOne(postTag.getPostId()));
+        }
+        return posts;
+    }
 }

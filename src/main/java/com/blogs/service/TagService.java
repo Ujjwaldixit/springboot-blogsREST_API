@@ -9,4 +9,5 @@ import java.util.List;
 public interface TagService {
     List<Tag> getAllTags();
     List<Integer> saveTag(String tag);
+    List<Tag> findByNameLike(String keyword);
 }
