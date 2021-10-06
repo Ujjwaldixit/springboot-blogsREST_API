@@ -10,11 +10,11 @@
     <H1>posts</H1>
     <a th:href="@{/showNewPostForm}">Add Post</a>
     <a th:href="@{/register}">Register User</a>
-
+    <br>
+    <br>
     <span>
-        <label>Search</label>
-        <form th:action="@{/?search=}">
-            <input type="text" placeholder="Search">
+        <form th:action="@{/?search=}" method="GET">
+            <input type="text" placeholder="Search" name="search">
             <button type="submit">Search</button>
         </form>
     </span>
