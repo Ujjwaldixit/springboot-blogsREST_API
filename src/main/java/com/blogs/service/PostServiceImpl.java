@@ -4,9 +4,7 @@ import com.blogs.model.Post;
 import com.blogs.model.PostTag;
 import com.blogs.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -56,11 +54,11 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> findPostsByKeyword(String keyword) {
-        List<Post> posts = postRepository.findByExcerptLike(keyword);
-        posts.addAll(postRepository.findByAuthorLike(keyword));
-        posts.addAll(postRepository.findByTitleLike(keyword));
-        posts.addAll(postRepository.findByContentLike(keyword));
+    public List<Post> findPostsByKeyword(String keyword,Pageable pageable) {
+        List<Post> posts = postRepository.findByExcerptLike(keyword,pageable).getContent();
+        posts.addAll(postRepository.findByAuthorLike(keyword,pageable).getContent());
+        posts.addAll(postRepository.findByTitleLike(keyword,pageable).getContent());
+        posts.addAll(postRepository.findByContentLike(keyword,pageable).getContent());
         HashSet<Post> uniquePosts = new HashSet<>(posts);
         return new ArrayList<>(uniquePosts);
     }
@@ -75,12 +73,23 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> findPostsByAuthor(String author) {
-        return postRepository.findByAuthor(author);
+    public List<Post> findPostsByAuthor(String author,Pageable pageable) {
+        return postRepository.findByAuthor(author,pageable).getContent();
     }
 
     @Override
-    public List<Post> findPostsByPublishedAt(Timestamp publishedAt) {
-        return postRepository.findByPublishedAt(publishedAt);
+    public List<Post> findPostsByPublishedAt(Timestamp publishedAt,Pageable pageable) {
+        return postRepository.findByPublishedAt(publishedAt,pageable).getContent();
     }
+
+    @Override
+    public List<Post> findPostWithPaginationAndSorting(Pageable pageable) {
+        Slice<Post> slice=null;
+        slice=postRepository.findAll(pageable);
+        return slice.getContent();
+    }
+
+
+
+
 }

@@ -4,6 +4,9 @@ import com.blogs.model.*;
 import com.blogs.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,9 +38,11 @@ public class PostController {
                            @RequestParam(value = "publishedAt", required = false) Timestamp publishedAt,
                            Model model) {
 
-        List<Post> posts = postService.findPostsWithPaginationAndSorting(pageNo, pageSize, sortField, sortOrder).toList();
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortField));
+        List<Post> posts = postService.findPostWithPaginationAndSorting(pageable);
+
         if (searchKeyword != null) {
-            posts = postService.findPostsByKeyword(searchKeyword);
+            posts = postService.findPostsByKeyword(searchKeyword,pageable);
             if (posts.size() == 0) {
                 List<Tag> tags = tagService.findTagsByName(searchKeyword);
                 if (tags != null) {
@@ -50,10 +55,10 @@ public class PostController {
         if (author != null || tag != null || publishedAt != null) {
             posts = new ArrayList<>();
             if (author != null) {
-                posts.addAll(postService.findPostsByAuthor(author));
+                posts.addAll(postService.findPostsByAuthor(author,pageable));
             }
             if (publishedAt != null) {
-                posts.addAll(postService.findPostsByPublishedAt(publishedAt));
+                posts.addAll(postService.findPostsByPublishedAt(publishedAt,pageable));
             }
             if (tag != null) {
                 List<Tag> tags = tagService.findTagsByName(tag);
