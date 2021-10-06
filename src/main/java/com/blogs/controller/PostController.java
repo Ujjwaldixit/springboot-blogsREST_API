@@ -19,7 +19,7 @@ public class PostController {
     @Autowired
     private TagService tagService;
     @Autowired
-    private PostAndTagService postAndTagService;
+    private PostTagService postTagService;
     @Autowired
     private CommentService commentService;
 
@@ -40,7 +40,7 @@ public class PostController {
             if (posts.size() == 0) {
                 List<Tag> tags = tagService.findByNameLike(searchKeyword);
                 if (tags != null) {
-                    List<PostTag> postTags = postAndTagService.getPostTagByTags(tags);
+                    List<PostTag> postTags = postTagService.getPostTagByTags(tags);
                     posts = postService.findPostsByPostTag(postTags);
                 }
             }
@@ -57,7 +57,7 @@ public class PostController {
             if (tag != null) {
                 List<Tag> tags = tagService.findByNameLike(tag);
                 if (tags != null) {
-                    List<PostTag> postTags = postAndTagService.getPostTagByTags(tags);
+                    List<PostTag> postTags = postTagService.getPostTagByTags(tags);
                     posts.addAll(postService.findPostsByPostTag(postTags));
                 }
             }
@@ -82,10 +82,10 @@ public class PostController {
 
     @PostMapping("/savePost")
     public String savePost(@ModelAttribute("post") Post post, @RequestParam("Tags") String tags, PostTag postTag) {
-        post=postService.savePost(post);
-        int postId=postService.findPostIdByPost(post);
+        post = postService.savePost(post);
+        int postId = postService.findPostIdByPost(post);
         List<Integer> tagIds = new ArrayList<>();
-        if (tags.length()>0) {
+        if (tags.length() > 0) {
             tagIds = tagService.saveTag(tags);
         }
 
@@ -93,11 +93,11 @@ public class PostController {
         if (tagIds.size() > 0) {
             for (int tagId : tagIds) {
                 postTag.setTagId(tagId);
-                postAndTagService.addPostTag(postTag);
+                postTagService.savePostTag(postTag);
             }
         } else {
             postTag.setTagId(0);
-            postAndTagService.addPostTag(postTag);
+            postTagService.savePostTag(postTag);
         }
         return "redirect:/";
     }
@@ -128,9 +128,9 @@ public class PostController {
     @GetMapping("/deletePost/{postId}")
     public String deletePost(@PathVariable("postId") int postId) {
         postService.deletePost(postId);
-        List<PostTag> postTags = postAndTagService.getPostTagByPostId(postId);
+        List<PostTag> postTags = postTagService.getPostTagByPostId(postId);
         for (PostTag postTag : postTags) {
-            postAndTagService.deletePostTag(postTag);
+            postTagService.deletePostTag(postTag);
         }
         return "redirect:/";
     }

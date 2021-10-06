@@ -1,9 +1,8 @@
 package com.blogs.service;
 
-import com.blogs.model.PostAndTagIdentity;
 import com.blogs.model.PostTag;
 import com.blogs.model.Tag;
-import com.blogs.repository.PostAndTagRepository;
+import com.blogs.repository.PostTagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,30 +12,30 @@ import java.util.List;
 
 @Service
 @Transactional
-public class PostAndTagServiceImpl implements PostAndTagService {
+public class PostTagServiceImpl implements PostTagService {
     @Autowired
-    private PostAndTagRepository postAndTagRepository;
+    private PostTagRepository postTagRepository;
 
     @Override
-    public void addPostTag(PostTag postTag) {
-        postAndTagRepository.save(postTag);
+    public void savePostTag(PostTag postTag) {
+        postTagRepository.save(postTag);
     }
 
     @Override
     public List<PostTag> getPostTagByPostId(int postId) {
-        return postAndTagRepository.getPostTagByPostId(postId);
+        return postTagRepository.findPostTagByPostId(postId);
     }
 
     @Override
     public void deletePostTag(PostTag postTag) {
-        postAndTagRepository.delete(postTag);
+        postTagRepository.delete(postTag);
     }
 
     @Override
     public List<PostTag> getPostTagByTags(List<Tag> tags) {
         List<PostTag> postTags = new ArrayList<>();
         for (Tag tag : tags) {
-            postTags.addAll(postAndTagRepository.getPostTagByTagId(tag.getId()));
+            postTags.addAll(postTagRepository.findPostTagByTagId(tag.getId()));
         }
 
         return postTags;

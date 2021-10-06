@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface PostAndTagRepository extends JpaRepository<PostTag, PostAndTagIdentity> {
-    List<PostTag> getPostTagByPostId(int postId);
+public interface PostTagRepository extends JpaRepository<PostTag, PostAndTagIdentity> {
+    List<PostTag> findPostTagByPostId(int postId);
 
-    List<PostTag> getPostTagByTagId(int tagId);
+    List<PostTag> findPostTagByTagId(int tagId);
 }

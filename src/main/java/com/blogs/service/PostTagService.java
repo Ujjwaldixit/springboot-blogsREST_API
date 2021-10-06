@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public interface PostAndTagService {
-    void addPostTag(PostTag postTag);
+public interface PostTagService {
+    void savePostTag(PostTag postTag);
 
     List<PostTag> getPostTagByPostId(int postId);
 
