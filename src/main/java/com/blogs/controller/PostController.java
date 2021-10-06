@@ -28,7 +28,7 @@ public class PostController {
 
     @GetMapping("/")
     public String homePage(@RequestParam(value = "start", defaultValue = "0") int pageNo,
-                           @RequestParam(value = "limit", defaultValue = "2") int pageSize,
+                           @RequestParam(value = "limit", defaultValue = "3") int pageSize,
                            @RequestParam(value = "sortField", defaultValue = "publishedAt") String sortField,
                            @RequestParam(value = "order", defaultValue = "asc") String sortOrder,
                            @RequestParam(value = "search", required = false) String searchKeyword,
@@ -36,6 +36,7 @@ public class PostController {
                            @RequestParam(value = "tag", required = false) String tag,
                            @RequestParam(value = "publishedAt",required = false) Timestamp publishedAt,
                            Model model) {
+
         Page<Post> _posts = postService.findPostWithPaginationAndSorting(pageNo, pageSize, sortField, sortOrder);
         List<Post> posts = _posts.toList();
 
@@ -73,8 +74,10 @@ public class PostController {
             }
         }
 
+
         model.addAttribute("posts", posts);
         model.addAttribute("totalPages", _posts.getTotalPages());
+        model.addAttribute("start",pageNo);
         model.addAttribute("limit", pageSize);
         model.addAttribute("keyword", searchKeyword);
         return "index";
@@ -154,7 +157,6 @@ public class PostController {
 
     @PostMapping("/saveComment")
     public String saveComment(@ModelAttribute("_comment") Comment comment) {
-
         commentService.saveComment(comment);
         return "redirect:/fullPost/" + comment.getPostId();
     }

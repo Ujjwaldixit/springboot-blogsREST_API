@@ -12,8 +12,8 @@
     <a th:href="@{/register}">Register User</a>
     <br>
     <br>
-    <a th:href="@{/?sortField=publishedAt&order=asc}">Sort ASC</a>
-    <a th:href="@{/?sortField=publishedAt&order=desc}">Sort DESC</a>
+    <a th:href="@{'/?sortField=publishedAt&order=asc&start='+${start}+ '&limit='+${limit}}">Sort ASC</a>
+    <a th:href="@{'/?sortField=publishedAt&order=desc&start='+${start}+ '&limit='+${limit}}">Sort DESC</a>
     <br>
     <br>
     <span>
@@ -41,7 +41,7 @@
             </div>
             <div class="col-sm-1">
                     <span th:each="i: ${#numbers.sequence(0, totalPages-1)}">
-                      <a th:text="${i+1}" th:href="@{'/?start=' +${(i*limit)+1}+ '&limit=' +${limit}}"></a>
+                        <a th:text="${i+1}" th:href="@{'/?start=' +${(i*limit)+1}+ '&limit=' +${limit}}"></a>
                     </span>
 
             </div>

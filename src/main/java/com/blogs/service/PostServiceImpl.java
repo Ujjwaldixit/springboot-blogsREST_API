@@ -61,6 +61,18 @@ public class PostServiceImpl implements PostService{
         return postRepository.findAll(PageRequest.of(page,pageSize).withSort(Sort.by(Sort.Direction.DESC,sortingField)));
     }
 
+//    public Page<Post> findPostWithPagination(int page, int pageSize) {
+//        page = page / pageSize;
+//        return postRepository.findAll(PageRequest.of(page, pageSize));
+//    }
+//
+//    public Page<Post> findPostWithSorting(String sortingField,String sortingOrder) {
+//        page=page/pageSize;
+//        if(sortingOrder.equals("asc")||sortingOrder.equals("ASC")||sortingOrder.equals("Asc"))
+//            return postRepository.findAll(PageRequest.of(page,pageSize).withSort(Sort.by(Sort.Direction.ASC,sortingField)));
+//        return postRepository.findAll(PageRequest.of(page,pageSize).withSort(Sort.by(Sort.Direction.DESC,sortingField)));
+//    }
+
     @Override
     public List<Post> findAllLike(String keyword) {
         List<Post> post= postRepository.findByExcerptLike(keyword);
