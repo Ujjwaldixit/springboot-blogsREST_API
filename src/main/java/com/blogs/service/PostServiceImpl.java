@@ -80,4 +80,14 @@ public class PostServiceImpl implements PostService{
         }
         return posts;
     }
+
+    @Override
+    public List<Post> findPostByAuthor(String author) {
+        return postRepository.findPostByAuthor(author);
+    }
+
+    @Override
+    public List<Post> findPostByPublishedAt(Timestamp publishedAt) {
+        return postRepository.findPostByPublishedAt(publishedAt);
+    }
 }

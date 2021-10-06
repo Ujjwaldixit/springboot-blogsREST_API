@@ -8,7 +8,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -27,13 +28,18 @@ public class PostController {
 
     @GetMapping("/")
     public String homePage(@RequestParam(value = "start", defaultValue = "0") int pageNo,
-                           @RequestParam(value = "limit", defaultValue = "10") int pageSize,
+                           @RequestParam(value = "limit", defaultValue = "2") int pageSize,
                            @RequestParam(value = "sortField", defaultValue = "publishedAt") String sortField,
                            @RequestParam(value = "order", defaultValue = "asc") String sortOrder,
                            @RequestParam(value = "search", required = false) String searchKeyword,
+                           @RequestParam(value = "author",required = false) String author,
+                           @RequestParam(value = "tag", required = false) String tag,
+                           @RequestParam(value = "publishedAt",required = false) Timestamp publishedAt,
                            Model model) {
         Page<Post> _posts = postService.findPostWithPaginationAndSorting(pageNo, pageSize, sortField, sortOrder);
         List<Post> posts = _posts.toList();
+
+        //for searching
         if (searchKeyword != null) {
             posts = postService.findAllLike(searchKeyword);
             if (posts.size() == 0) {
@@ -44,6 +50,29 @@ public class PostController {
                 }
             }
         }
+
+        // for filtering
+        if(author!=null||tag!=null||publishedAt!=null)
+        {
+            posts=new ArrayList<>();
+            if(author!=null)
+            {
+               posts.addAll(postService.findPostByAuthor(author));
+            }
+            if(publishedAt!=null)
+            {
+                posts.addAll(postService.findPostByPublishedAt(publishedAt));
+            }
+            if(tag!=null)
+            {
+                List<Tag> tags = tagService.findByNameLike(tag);
+                if (tags != null) {
+                    List<PostTag> postTags = postAndTagService.getPostTagByTags(tags);
+                    posts.addAll(postService.findPostByPostTag(postTags));
+                }
+            }
+        }
+
         model.addAttribute("posts", posts);
         model.addAttribute("totalPages", _posts.getTotalPages());
         model.addAttribute("limit", pageSize);
@@ -65,8 +94,7 @@ public class PostController {
     @PostMapping("/savePost")
     public String savePost(@ModelAttribute("post") Post post, @RequestParam("Tags") String tags, PostTag postTag) {
         int postId = postService.savePost(post);
-        //save tags
-        List<Integer> tagIds = null;
+        List<Integer> tagIds = new ArrayList<>();
         if (!tags.equals("")) {
             tagIds = tagService.saveTag(tags);
         }
