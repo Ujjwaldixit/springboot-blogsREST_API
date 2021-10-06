@@ -18,8 +18,6 @@ public interface PostService {
 
     void deletePost(int id);
 
-    int findPostIdByPost(Post post);
-
     Page<Post> findPostsWithPaginationAndSorting(int page, int pageSize, String sortingField, String sortingOrder);
 
     List<Post> findPostsByKeyword(String keyword);

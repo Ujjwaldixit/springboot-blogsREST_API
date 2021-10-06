@@ -11,7 +11,7 @@ public interface CommentService {
 
     void deleteComment(int commentId);
 
-    List<Comment> getCommentByPostId(int postId);
+    List<Comment> findCommentsByPostId(int postId);
 
-    Comment getCommentById(int commentId);
+    Comment findCommentById(int commentId);
 }

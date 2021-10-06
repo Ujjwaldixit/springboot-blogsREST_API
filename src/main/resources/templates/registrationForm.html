@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1> Registration form</h1>
-    <form action="" th:action="@{/registerUser}" th:object="${user}" method="POST">
+    <form action="" th:action="@{/register}" th:object="${user}" method="POST">
 
         <div class="alert alert-success text-center" role="alert" th:text="${success}" th:if="${success}"></div>
         <div class="alert alert-error text-center" role="alert" th:text="${error}" th:if="${error}"></div>

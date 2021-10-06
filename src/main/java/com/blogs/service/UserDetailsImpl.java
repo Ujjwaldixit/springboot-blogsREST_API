@@ -30,7 +30,6 @@ public class UserDetailsImpl implements UserDetails {
         return user.getPassword();
     }
 
-    //Fetching by email not by userName
     @Override
     public String getUsername() {
         return user.getEmail();

@@ -10,6 +10,5 @@ import java.util.List;
 public interface TagRepository extends JpaRepository<Tag, Integer> {
     Tag findByName(String tagName);
 
-    List<Tag> findByNameLike(String keyword);
-
+    List<Tag> findTagByNameLike(String tagName);
 }

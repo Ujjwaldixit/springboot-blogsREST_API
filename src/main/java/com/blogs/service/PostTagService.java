@@ -13,9 +13,9 @@ import java.util.List;
 public interface PostTagService {
     void savePostTag(PostTag postTag);
 
-    List<PostTag> getPostTagByPostId(int postId);
+    List<PostTag> findPostTagsByPostId(int postId);
 
     void deletePostTag(PostTag postAndTag);
 
-    List<PostTag> getPostTagByTags(List<Tag> tag);
+    List<PostTag> findPostTagsByTags(List<Tag> tag);
 }

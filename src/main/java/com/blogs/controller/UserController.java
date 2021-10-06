@@ -29,11 +29,11 @@ public class UserController {
         } else {
             redirectAttributes.addFlashAttribute("error", "!!! Already Registered !!!");
         }
-        return "redirect:/register";
+        return "redirect:/login";
     }
 
     @GetMapping("/login")
-    public String login() {
+    public String showLoginForm() {
         return "loginForm";
     }
 }

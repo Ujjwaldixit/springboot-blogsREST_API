@@ -3,6 +3,7 @@ package com.blogs.controller;
 import com.blogs.model.*;
 import com.blogs.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,9 +39,9 @@ public class PostController {
         if (searchKeyword != null) {
             posts = postService.findPostsByKeyword(searchKeyword);
             if (posts.size() == 0) {
-                List<Tag> tags = tagService.findByNameLike(searchKeyword);
+                List<Tag> tags = tagService.findTagsByName(searchKeyword);
                 if (tags != null) {
-                    List<PostTag> postTags = postTagService.getPostTagByTags(tags);
+                    List<PostTag> postTags = postTagService.findPostTagsByTags(tags);
                     posts = postService.findPostsByPostTag(postTags);
                 }
             }
@@ -55,16 +56,17 @@ public class PostController {
                 posts.addAll(postService.findPostsByPublishedAt(publishedAt));
             }
             if (tag != null) {
-                List<Tag> tags = tagService.findByNameLike(tag);
+                List<Tag> tags = tagService.findTagsByName(tag);
                 if (tags != null) {
-                    List<PostTag> postTags = postTagService.getPostTagByTags(tags);
+                    List<PostTag> postTags = postTagService.findPostTagsByTags(tags);
                     posts.addAll(postService.findPostsByPostTag(postTags));
                 }
             }
         }
 
+        System.out.println(new PageImpl<>(posts).getTotalPages());
         model.addAttribute("posts", posts);
-        model.addAttribute("totalPages", posts);
+        model.addAttribute("totalPages", new PageImpl<>(posts).getTotalPages());
         model.addAttribute("start", pageNo);
         model.addAttribute("limit", pageSize);
         model.addAttribute("keyword", searchKeyword);
@@ -83,7 +85,7 @@ public class PostController {
     @PostMapping("/savePost")
     public String savePost(@ModelAttribute("post") Post post, @RequestParam("Tags") String tags, PostTag postTag) {
         post = postService.savePost(post);
-        int postId = postService.findPostIdByPost(post);
+        int postId = post.getId();
         List<Integer> tagIds = new ArrayList<>();
         if (tags.length() > 0) {
             tagIds = tagService.saveTag(tags);
@@ -106,7 +108,7 @@ public class PostController {
     public String displayFullPost(@AuthenticationPrincipal UserDetailsImpl user, @PathVariable("postId") int postId, Model model) {
         Post post = postService.findPostById(postId);
         model.addAttribute("posts", post);
-        List<Comment> comments = commentService.getCommentByPostId(postId);
+        List<Comment> comments = commentService.findCommentsByPostId(postId);
         model.addAttribute("comments", comments);
 
         if (user != null)
@@ -128,7 +130,7 @@ public class PostController {
     @GetMapping("/deletePost/{postId}")
     public String deletePost(@PathVariable("postId") int postId) {
         postService.deletePost(postId);
-        List<PostTag> postTags = postTagService.getPostTagByPostId(postId);
+        List<PostTag> postTags = postTagService.findPostTagsByPostId(postId);
         for (PostTag postTag : postTags) {
             postTagService.deletePostTag(postTag);
         }
@@ -150,7 +152,7 @@ public class PostController {
 
     @GetMapping("/updateComment/{commentId}")
     public String updateComment(@PathVariable("commentId") int commentId, Model model) {
-        Comment comment = commentService.getCommentById(commentId);
+        Comment comment = commentService.findCommentById(commentId);
         model.addAttribute("_comment", comment);
         return "commentForm";
     }

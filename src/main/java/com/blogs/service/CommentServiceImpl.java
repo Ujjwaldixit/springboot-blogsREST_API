@@ -24,13 +24,12 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<Comment> getCommentByPostId(int postId) {
+    public List<Comment> findCommentsByPostId(int postId) {
        return commentRepository.getCommentByPostId(postId);
-
     }
 
     @Override
-    public Comment getCommentById(int commentId) {
+    public Comment findCommentById(int commentId) {
         return commentRepository.getOne(commentId);
     }
 }

@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -27,6 +26,7 @@ public class PostServiceImpl implements PostService {
         return postRepository.findAll();
     }
 
+    @Override
     public Post savePost(Post post) {
         post.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         if (post.getContent().length() >= 100) {
@@ -35,7 +35,6 @@ public class PostServiceImpl implements PostService {
             post.setExcerpt(post.getContent());
         }
         return this.postRepository.save(post);
-
     }
 
     @Override
@@ -46,11 +45,6 @@ public class PostServiceImpl implements PostService {
     @Override
     public void deletePost(int id) {
         postRepository.deleteById(id);
-    }
-
-    @Override
-    public int findPostIdByPost(Post post) {
-        return postRepository.findPostIdByPost(post);
     }
 
     @Override
@@ -82,11 +76,11 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<Post> findPostsByAuthor(String author) {
-        return postRepository.findPostByAuthor(author);
+        return postRepository.findByAuthor(author);
     }
 
     @Override
     public List<Post> findPostsByPublishedAt(Timestamp publishedAt) {
-        return postRepository.findPostByPublishedAt(publishedAt);
+        return postRepository.findByPublishedAt(publishedAt);
     }
 }

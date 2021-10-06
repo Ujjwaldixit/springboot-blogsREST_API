@@ -36,7 +36,6 @@ public class TagServiceImpl implements TagService {
                 Tag newTag = new Tag();
                 newTag.setName(s);
                 this.tagRepository.save(newTag);
-                System.out.println("saved tag==" + s);
                 tagCheck = tagRepository.findByName(s);
             }
             tagIds.add(tagCheck.getId());
@@ -45,9 +44,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<Tag> findByNameLike(String keyword) {
-        return tagRepository.findByNameLike(keyword);
+    public List<Tag> findTagsByName(String keyword) {
+        return tagRepository.findTagByNameLike(keyword);
     }
 }
-
-

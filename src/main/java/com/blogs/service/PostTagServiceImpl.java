@@ -22,7 +22,7 @@ public class PostTagServiceImpl implements PostTagService {
     }
 
     @Override
-    public List<PostTag> getPostTagByPostId(int postId) {
+    public List<PostTag> findPostTagsByPostId(int postId) {
         return postTagRepository.findPostTagByPostId(postId);
     }
 
@@ -32,12 +32,11 @@ public class PostTagServiceImpl implements PostTagService {
     }
 
     @Override
-    public List<PostTag> getPostTagByTags(List<Tag> tags) {
+    public List<PostTag> findPostTagsByTags(List<Tag> tags) {
         List<PostTag> postTags = new ArrayList<>();
         for (Tag tag : tags) {
             postTags.addAll(postTagRepository.findPostTagByTagId(tag.getId()));
         }
-
         return postTags;
     }
 }
