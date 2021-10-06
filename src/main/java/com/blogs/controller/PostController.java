@@ -29,7 +29,6 @@ public class PostController {
                            @RequestParam(value = "sortField",defaultValue = "publishedAt")String sortField,
                            @RequestParam(value = "order",defaultValue = "asc")String sortOrder,
                            @RequestParam(value = "search",required = false) String searchKeyword,
-                           @RequestParam()
                            Model model)
     {
         Page<Post> _posts= postService.findPostWithPaginationAndSorting(pageNo,pageSize,sortField,sortOrder);
@@ -44,6 +43,8 @@ public class PostController {
         model.addAttribute("keyword",searchKeyword);
         return "index";
     }
+
+
 
     @GetMapping("/showNewPostForm")
     public String newPost(@AuthenticationPrincipal UserDetailsImpl user, Model model,Post post)

@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -28,7 +29,7 @@ public class PostServiceImpl implements PostService{
 
     public int savePost(Post post)
     {
-        //setting excerpt
+        post.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         if(post.getContent().length()>=100)
         {
             post.setExcerpt(post.getContent().substring(0,90));

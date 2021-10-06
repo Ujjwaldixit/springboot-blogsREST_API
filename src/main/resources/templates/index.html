@@ -12,13 +12,16 @@
     <a th:href="@{/register}">Register User</a>
     <br>
     <br>
+    <a th:href="@{/?sortField=publishedAt&order=asc}">Sort ASC</a>
+    <a th:href="@{/?sortField=publishedAt&order=desc}">Sort DESC</a>
+    <br>
+    <br>
     <span>
         <form th:action="@{/?search=}" method="GET">
             <input type="text" placeholder="Search" name="search">
             <button type="submit">Search</button>
         </form>
     </span>
-
     <br>
     <p>------------------------------------------------------</p>
     <div th:each="post :${posts}">
