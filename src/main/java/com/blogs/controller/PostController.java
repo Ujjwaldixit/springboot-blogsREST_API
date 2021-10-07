@@ -3,10 +3,7 @@ package com.blogs.controller;
 import com.blogs.model.*;
 import com.blogs.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,7 +26,7 @@ public class PostController {
 
     @GetMapping("/")
     public String homePage(@RequestParam(value = "start", defaultValue = "0") int pageNo,
-                           @RequestParam(value = "limit", defaultValue = "3") int pageSize,
+                           @RequestParam(value = "limit", defaultValue = "10") int pageSize,
                            @RequestParam(value = "sortField", defaultValue = "publishedAt") String sortField,
                            @RequestParam(value = "order", defaultValue = "asc") String sortOrder,
                            @RequestParam(value = "search", required = false) String searchKeyword,
@@ -38,11 +35,11 @@ public class PostController {
                            @RequestParam(value = "publishedAt", required = false) Timestamp publishedAt,
                            Model model) {
 
-        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortField));
-        List<Post> posts = postService.findPostWithPaginationAndSorting(pageable);
+        Page<Post> sortedAndPaginatedPosts = postService.findPostsWithPaginationAndSorting(pageNo, pageSize, sortField, sortOrder);
+        List<Post> posts = sortedAndPaginatedPosts.toList();
 
         if (searchKeyword != null) {
-            posts = postService.findPostsByKeyword(searchKeyword,pageable);
+            posts = postService.findPostsByKeyword(searchKeyword);
             if (posts.size() == 0) {
                 List<Tag> tags = tagService.findTagsByName(searchKeyword);
                 if (tags != null) {
@@ -55,10 +52,10 @@ public class PostController {
         if (author != null || tag != null || publishedAt != null) {
             posts = new ArrayList<>();
             if (author != null) {
-                posts.addAll(postService.findPostsByAuthor(author,pageable));
+                posts.addAll(postService.findPostsByAuthor(author));
             }
             if (publishedAt != null) {
-                posts.addAll(postService.findPostsByPublishedAt(publishedAt,pageable));
+                posts.addAll(postService.findPostsByPublishedAt(publishedAt));
             }
             if (tag != null) {
                 List<Tag> tags = tagService.findTagsByName(tag);
@@ -69,9 +66,8 @@ public class PostController {
             }
         }
 
-        System.out.println(new PageImpl<>(posts).getTotalPages());
-        model.addAttribute("posts", posts);
-        model.addAttribute("totalPages", new PageImpl<>(posts).getTotalPages());
+        model.addAttribute("sortedAndPaginatedPosts", posts);
+        model.addAttribute("totalPages", sortedAndPaginatedPosts.getTotalPages());
         model.addAttribute("start", pageNo);
         model.addAttribute("limit", pageSize);
         model.addAttribute("keyword", searchKeyword);

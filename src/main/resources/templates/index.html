@@ -34,11 +34,8 @@
     </div>
 
 
-    <div th:if="${totalPages > 0}">
+    <div th:if="${totalPages > 0|| totalPages!=null}">
         <div class="row col-sm-10">
-            <div class="col-sm-2">
-                Total Rows: [[${totalItems}]]
-            </div>
             <div class="col-sm-1">
                     <span th:each="i: ${#numbers.sequence(0, totalPages-1)}">
                         <a th:text="${i+1}" th:href="@{'/?start=' +${(i*limit)+1}+ '&limit=' +${limit}}"></a>

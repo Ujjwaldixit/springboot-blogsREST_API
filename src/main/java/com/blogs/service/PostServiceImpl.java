@@ -54,11 +54,11 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> findPostsByKeyword(String keyword,Pageable pageable) {
-        List<Post> posts = postRepository.findByExcerptLike(keyword,pageable).getContent();
-        posts.addAll(postRepository.findByAuthorLike(keyword,pageable).getContent());
-        posts.addAll(postRepository.findByTitleLike(keyword,pageable).getContent());
-        posts.addAll(postRepository.findByContentLike(keyword,pageable).getContent());
+    public List<Post> findPostsByKeyword(String keyword) {
+        List<Post> posts = postRepository.findByExcerptLike(keyword);
+        posts.addAll(postRepository.findByAuthorLike(keyword));
+        posts.addAll(postRepository.findByTitleLike(keyword));
+        posts.addAll(postRepository.findByContentLike(keyword));
         HashSet<Post> uniquePosts = new HashSet<>(posts);
         return new ArrayList<>(uniquePosts);
     }
@@ -73,23 +73,19 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> findPostsByAuthor(String author,Pageable pageable) {
-        return postRepository.findByAuthor(author,pageable).getContent();
+    public List<Post> findPostsByAuthor(String author) {
+        return postRepository.findByAuthor(author);
     }
 
     @Override
-    public List<Post> findPostsByPublishedAt(Timestamp publishedAt,Pageable pageable) {
-        return postRepository.findByPublishedAt(publishedAt,pageable).getContent();
+    public List<Post> findPostsByPublishedAt(Timestamp publishedAt) {
+        return postRepository.findByPublishedAt(publishedAt);
     }
 
     @Override
     public List<Post> findPostWithPaginationAndSorting(Pageable pageable) {
-        Slice<Post> slice=null;
-        slice=postRepository.findAll(pageable);
+        Slice<Post> slice = null;
+        slice = postRepository.findAll(pageable);
         return slice.getContent();
     }
-
-
-
-
 }

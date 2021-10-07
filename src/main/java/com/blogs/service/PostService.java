@@ -22,13 +22,13 @@ public interface PostService {
 
     Page<Post> findPostsWithPaginationAndSorting(int page, int pageSize, String sortingField, String sortingOrder);
 
-    List<Post> findPostsByKeyword(String keyword,Pageable pageable);
+    List<Post> findPostsByKeyword(String keyword);
 
     List<Post> findPostsByPostTag(List<PostTag> postTags);
 
-    List<Post> findPostsByAuthor(String author,Pageable pageable);
+    List<Post> findPostsByAuthor(String author);
 
-    List<Post> findPostsByPublishedAt(Timestamp publishedAt,Pageable pageable);
+    List<Post> findPostsByPublishedAt(Timestamp publishedAt);
 
     List<Post> findPostWithPaginationAndSorting(Pageable pageable);
 }

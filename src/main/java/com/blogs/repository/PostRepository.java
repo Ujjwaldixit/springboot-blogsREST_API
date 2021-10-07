@@ -1,6 +1,7 @@
 package com.blogs.repository;
 
 import com.blogs.model.Post;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,15 +12,15 @@ import java.util.List;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Integer> {
-    Slice<Post> findByAuthorLike(String keyword, Pageable pageable);
+    List<Post> findByAuthorLike(String keyword);
 
-    Slice<Post> findByTitleLike(String keyword, Pageable pageable);
+    List<Post> findByTitleLike(String keyword);
 
-    Slice<Post> findByContentLike(String keyword, Pageable pageable);
+    List<Post> findByContentLike(String keyword);
 
-    Slice<Post> findByExcerptLike(String keyword, Pageable pageable);
+    List<Post> findByExcerptLike(String keyword);
 
-    Slice<Post> findByAuthor(String author,Pageable pageable);
+    List<Post> findByAuthor(String author);
 
-    Slice<Post> findByPublishedAt(Timestamp publishedAt,Pageable pageable);
+    List<Post> findByPublishedAt(Timestamp publishedAt);
 }
