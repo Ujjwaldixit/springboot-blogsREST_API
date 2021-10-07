@@ -11,5 +11,5 @@ public interface TagService {
 
     List<Integer> saveTag(String tag);
 
-    List<Tag> findTagsByName(String tagName);
+    List<Tag> findTagsByName(List<String> tagName);
 }

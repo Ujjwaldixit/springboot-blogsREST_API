@@ -73,19 +73,20 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> findPostsByAuthor(String author) {
-        return postRepository.findByAuthor(author);
+    public List<Post> findPostsByAuthor(List<String> authors) {
+        List<Post> posts=new ArrayList<>();
+        for(String author:authors) {
+            posts.addAll( postRepository.findByAuthor(author));
+        }
+        return  posts;
     }
 
     @Override
-    public List<Post> findPostsByPublishedAt(Timestamp publishedAt) {
-        return postRepository.findByPublishedAt(publishedAt);
-    }
-
-    @Override
-    public List<Post> findPostWithPaginationAndSorting(Pageable pageable) {
-        Slice<Post> slice = null;
-        slice = postRepository.findAll(pageable);
-        return slice.getContent();
+    public List<Post> findPostsByPublishedAt(List<Timestamp> publishedAt) {
+        List<Post> posts=new ArrayList<>();
+        for(Timestamp publishAt:publishedAt) {
+            posts.addAll(postRepository.findByPublishedAt(publishAt));
+        }
+        return posts;
     }
 }

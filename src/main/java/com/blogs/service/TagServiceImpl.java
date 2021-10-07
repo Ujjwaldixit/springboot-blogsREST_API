@@ -44,7 +44,10 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<Tag> findTagsByName(String keyword) {
-        return tagRepository.findTagByNameLike(keyword);
+    public List<Tag> findTagsByName(List<String> tagsName) {
+        List<Tag> tags = new ArrayList<>();
+        for (String tagName : tagsName)
+            tags.addAll(tagRepository.findTagByNameLike(tagName));
+        return tags;
     }
 }

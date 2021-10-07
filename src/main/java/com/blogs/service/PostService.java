@@ -26,9 +26,7 @@ public interface PostService {
 
     List<Post> findPostsByPostTag(List<PostTag> postTags);
 
-    List<Post> findPostsByAuthor(String author);
+    List<Post> findPostsByAuthor(List<String> author);
 
-    List<Post> findPostsByPublishedAt(Timestamp publishedAt);
-
-    List<Post> findPostWithPaginationAndSorting(Pageable pageable);
+    List<Post> findPostsByPublishedAt(List<Timestamp> publishedAt);
 }

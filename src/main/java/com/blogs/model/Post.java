@@ -36,5 +36,4 @@ public class Post {
 
     @CreationTimestamp
     private Timestamp updatedAt;
-
 }

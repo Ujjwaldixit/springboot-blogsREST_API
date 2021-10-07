@@ -5,9 +5,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Embeddable;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
 import java.io.Serializable;
 
 @Data
@@ -15,6 +12,8 @@ import java.io.Serializable;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class PostAndTagIdentity implements Serializable {
+
     private int postId;
+
     private int tagId;
 }

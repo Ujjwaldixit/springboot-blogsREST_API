@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org"
-      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<html xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Comment</title>
@@ -8,27 +7,26 @@
 <body>
 <h1>Comments</h1>
 <br>
-    <form th:action="@{/saveComment}" th:object="${_comment}" class="center" method="POST">
-        <label>Name</label>
-        <input type="text" th:field="*{name}" th:value="${_comment.name}" placeholder="Enter Name" required>
-        <br>
-        <br>
-        <label>Email</label>
-        <input required type="email" th:field="*{email}" th:value="${_comment.email}"  placeholder="Enter email">
-        <br>
-        <br>
-        <label>Comment</label>
-        <input required type="text" th:field="*{comment}" th:value="${_comment.comment}"  placeholder="Write Comment">
-        <input type="hidden" th:field="*{postId}" th:value="${postId}">
-        <input type="hidden" th:field="*{id}" th:value="${_comment.id}">
+<form th:action="@{/saveComment}" th:object="${_comment}" class="center" method="POST">
+    <label>Name</label>
+    <input type="text" th:field="*{name}" th:value="${_comment.name}" placeholder="Enter Name" required>
+    <br>
+    <br>
+    <label>Email</label>
+    <input required type="email" th:field="*{email}" th:value="${_comment.email}" placeholder="Enter email">
+    <br>
+    <br>
+    <label>Comment</label>
+    <input required type="text" th:field="*{comment}" th:value="${_comment.comment}" placeholder="Write Comment">
+    <input type="hidden" th:field="*{postId}" th:value="${postId}">
+    <input type="hidden" th:field="*{id}" th:value="${_comment.id}">
+    <div th:if="${_comment.createdAt}!=null">
+        <input type="hidden" th:field="*{createdAt}" th:value="${_comment.createdAt}">
+    </div>
 
-        <div th:if="${_comment.createdAt}!=null">
-            <input type="hidden" th:field="*{createdAt}" th:value="${_comment.createdAt}">
-        </div>
-
-        <br>
-        <br>
-        <button type="submit">Submit</button>
-    </form>
+    <br>
+    <br>
+    <button type="submit">Submit</button>
+</form>
 </body>
 </html>

@@ -9,24 +9,24 @@
             width:50%;
         }
 
+
     </style>
     <style>
         .mul-select{
             width: 100%;
         }
 
+
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
-
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-
 </head>
 <body>
 <div align="center">
-    <h1>New Posts</h1>
+    <h1>New Post</h1>
     <form action="#" th:action="@{/savePost}" th:object="${post}" method="POST">
         <input type="text" th:field="*{title}" placeholder="Enter Title" required>
         <br>
@@ -76,6 +76,7 @@
                     tokenSeparators: ['/',',',';'," "]
                 });
             })
+
 
 </script>
 </body>

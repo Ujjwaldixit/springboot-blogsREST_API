@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -30,18 +31,19 @@ public class PostController {
                            @RequestParam(value = "sortField", defaultValue = "publishedAt") String sortField,
                            @RequestParam(value = "order", defaultValue = "asc") String sortOrder,
                            @RequestParam(value = "search", required = false) String searchKeyword,
-                           @RequestParam(value = "author", required = false) String author,
-                           @RequestParam(value = "tag", required = false) String tag,
-                           @RequestParam(value = "publishedAt", required = false) Timestamp publishedAt,
+                           @RequestParam(value = "author", required = false) List<String> authors,
+                           @RequestParam(value = "tag", required = false) List<String> tagsName,
+                           @RequestParam(value = "publishedAt", required = false) List<Timestamp> publishedAt,
                            Model model) {
 
         Page<Post> sortedAndPaginatedPosts = postService.findPostsWithPaginationAndSorting(pageNo, pageSize, sortField, sortOrder);
         List<Post> posts = sortedAndPaginatedPosts.toList();
 
         if (searchKeyword != null) {
+            sortedAndPaginatedPosts = null;
             posts = postService.findPostsByKeyword(searchKeyword);
             if (posts.size() == 0) {
-                List<Tag> tags = tagService.findTagsByName(searchKeyword);
+                List<Tag> tags = tagService.findTagsByName(Arrays.asList(searchKeyword));
                 if (tags != null) {
                     List<PostTag> postTags = postTagService.findPostTagsByTags(tags);
                     posts = postService.findPostsByPostTag(postTags);
@@ -49,25 +51,29 @@ public class PostController {
             }
         }
 
-        if (author != null || tag != null || publishedAt != null) {
+        if (authors != null || tagsName != null || publishedAt != null) {
+            sortedAndPaginatedPosts = null;
             posts = new ArrayList<>();
-            if (author != null) {
-                posts.addAll(postService.findPostsByAuthor(author));
+            if (authors != null) {
+                posts.addAll(postService.findPostsByAuthor(authors));
             }
             if (publishedAt != null) {
                 posts.addAll(postService.findPostsByPublishedAt(publishedAt));
             }
-            if (tag != null) {
-                List<Tag> tags = tagService.findTagsByName(tag);
+            if (tagsName != null) {
+                List<Tag> tags = tagService.findTagsByName(tagsName);
                 if (tags != null) {
                     List<PostTag> postTags = postTagService.findPostTagsByTags(tags);
                     posts.addAll(postService.findPostsByPostTag(postTags));
+
                 }
             }
         }
 
-        model.addAttribute("sortedAndPaginatedPosts", posts);
-        model.addAttribute("totalPages", sortedAndPaginatedPosts.getTotalPages());
+        if (sortedAndPaginatedPosts != null)
+            model.addAttribute("totalPages", sortedAndPaginatedPosts.getTotalPages());
+
+        model.addAttribute("posts", posts);
         model.addAttribute("start", pageNo);
         model.addAttribute("limit", pageSize);
         model.addAttribute("keyword", searchKeyword);
@@ -108,7 +114,7 @@ public class PostController {
     @GetMapping("/fullPost/{postId}")
     public String displayFullPost(@AuthenticationPrincipal UserDetailsImpl user, @PathVariable("postId") int postId, Model model) {
         Post post = postService.findPostById(postId);
-        model.addAttribute("posts", post);
+        model.addAttribute("post", post);
         List<Comment> comments = commentService.findCommentsByPostId(postId);
         model.addAttribute("comments", comments);
 
