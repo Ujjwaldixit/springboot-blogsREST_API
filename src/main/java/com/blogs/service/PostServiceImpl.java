@@ -74,19 +74,23 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<Post> findPostsByAuthor(List<String> authors) {
-        List<Post> posts=new ArrayList<>();
-        for(String author:authors) {
-            posts.addAll( postRepository.findByAuthor(author));
+        List<Post> posts = new ArrayList<>();
+        for (String author : authors) {
+            posts.addAll(postRepository.findByAuthor(author));
         }
-        return  posts;
+        return posts;
     }
 
     @Override
-    public List<Post> findPostsByPublishedAt(List<Timestamp> publishedAt) {
-        List<Post> posts=new ArrayList<>();
-        for(Timestamp publishAt:publishedAt) {
-            posts.addAll(postRepository.findByPublishedAt(publishAt));
+    public List<Post> findPostsByPublishedAt(List<String> publishedAt) {
+        System.out.println("publishedAt size" + publishedAt.size());
+        List<Post> posts = new ArrayList<>();
+        for (String publishAt : publishedAt) {
+            System.out.println("loop");
+            System.out.println(publishAt + "  pos  " + postRepository.findByPublishedAt(Timestamp.valueOf(publishAt)));
+            posts.addAll(postRepository.findByPublishedAt(Timestamp.valueOf(publishAt)));
         }
+        System.out.print("posts=" + posts);
         return posts;
     }
 }

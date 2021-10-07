@@ -4,6 +4,8 @@ import com.blogs.model.*;
 import com.blogs.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@Controller
+@RestController
 public class PostController {
     @Autowired
     private PostService postService;
@@ -26,58 +28,64 @@ public class PostController {
     private CommentService commentService;
 
     @GetMapping("/")
-    public String homePage(@RequestParam(value = "start", defaultValue = "0") int pageNo,
-                           @RequestParam(value = "limit", defaultValue = "10") int pageSize,
-                           @RequestParam(value = "sortField", defaultValue = "publishedAt") String sortField,
-                           @RequestParam(value = "order", defaultValue = "asc") String sortOrder,
-                           @RequestParam(value = "search", required = false) String searchKeyword,
-                           @RequestParam(value = "author", required = false) List<String> authors,
-                           @RequestParam(value = "tag", required = false) List<String> tagsName,
-                           @RequestParam(value = "publishedAt", required = false) List<Timestamp> publishedAt,
-                           Model model) {
+    public ResponseEntity<List<Post>> homePage(@RequestParam(value = "start", defaultValue = "0") int pageNo,
+                                               @RequestParam(value = "limit", defaultValue = "3") int pageSize,
+                                               @RequestParam(value = "sortField", defaultValue = "publishedAt") String sortField,
+                                               @RequestParam(value = "order", defaultValue = "asc") String sortOrder,
+                                               @RequestParam(value = "search", required = false) String searchKeyword,
+                                               @RequestParam(value = "author", required = false) List<String> authors,
+                                               @RequestParam(value = "tag", required = false) List<String> tagsName,
+                                               @RequestParam(value = "publishedAt", required = false) List<String> publishedAt,
+                                               Model model) {
 
-        Page<Post> sortedAndPaginatedPosts = postService.findPostsWithPaginationAndSorting(pageNo, pageSize, sortField, sortOrder);
-        List<Post> posts = sortedAndPaginatedPosts.toList();
+        try {
+            Page<Post> sortedAndPaginatedPosts = postService.findPostsWithPaginationAndSorting(pageNo, pageSize, sortField, sortOrder);
+            List<Post> posts = sortedAndPaginatedPosts.toList();
 
-        if (searchKeyword != null) {
-            sortedAndPaginatedPosts = null;
-            posts = postService.findPostsByKeyword(searchKeyword);
-            if (posts.size() == 0) {
+            if (searchKeyword != null) {
+                sortedAndPaginatedPosts = null;
+                posts = postService.findPostsByKeyword(searchKeyword);
                 List<Tag> tags = tagService.findTagsByName(Arrays.asList(searchKeyword));
                 if (tags != null) {
                     List<PostTag> postTags = postTagService.findPostTagsByTags(tags);
                     posts = postService.findPostsByPostTag(postTags);
                 }
             }
-        }
 
-        if (authors != null || tagsName != null || publishedAt != null) {
-            sortedAndPaginatedPosts = null;
-            posts = new ArrayList<>();
-            if (authors != null) {
-                posts.addAll(postService.findPostsByAuthor(authors));
-            }
-            if (publishedAt != null) {
-                posts.addAll(postService.findPostsByPublishedAt(publishedAt));
-            }
-            if (tagsName != null) {
-                List<Tag> tags = tagService.findTagsByName(tagsName);
-                if (tags != null) {
-                    List<PostTag> postTags = postTagService.findPostTagsByTags(tags);
-                    posts.addAll(postService.findPostsByPostTag(postTags));
+            if (authors != null || tagsName != null || publishedAt != null) {
+                System.out.println("publishedAt1");
+                sortedAndPaginatedPosts = null;
+                posts = new ArrayList<>();
+                if (authors != null) {
+                    posts.addAll(postService.findPostsByAuthor(authors));
+                }
+                if (publishedAt != null) {
+                    System.out.println("publishedAt2");
+                    posts.addAll(postService.findPostsByPublishedAt(publishedAt));
+                }
+                if (tagsName != null) {
+                    List<Tag> tags = tagService.findTagsByName(tagsName);
+                    if (tags != null) {
+                        List<PostTag> postTags = postTagService.findPostTagsByTags(tags);
+                        posts.addAll(postService.findPostsByPostTag(postTags));
 
+                    }
                 }
             }
+
+            if (sortedAndPaginatedPosts != null)
+                model.addAttribute("totalPages", sortedAndPaginatedPosts.getTotalPages());
+
+            model.addAttribute("posts", posts);
+            model.addAttribute("start", pageNo);
+            model.addAttribute("limit", pageSize);
+            model.addAttribute("keyword", searchKeyword);
+            return new ResponseEntity<>(posts, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        if (sortedAndPaginatedPosts != null)
-            model.addAttribute("totalPages", sortedAndPaginatedPosts.getTotalPages());
 
-        model.addAttribute("posts", posts);
-        model.addAttribute("start", pageNo);
-        model.addAttribute("limit", pageSize);
-        model.addAttribute("keyword", searchKeyword);
-        return "index";
     }
 
     @GetMapping("/showNewPostForm")
