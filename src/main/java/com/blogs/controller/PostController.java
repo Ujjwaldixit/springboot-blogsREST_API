@@ -9,8 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.concurrent.SuccessCallback;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Status;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -84,8 +86,6 @@ public class PostController {
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-
     }
 
     @GetMapping("/showNewPostForm")
@@ -98,25 +98,30 @@ public class PostController {
     }
 
     @PostMapping("/savePost")
-    public String savePost(@ModelAttribute("post") Post post, @RequestParam("Tags") String tags, PostTag postTag) {
-        post = postService.savePost(post);
-        int postId = post.getId();
-        List<Integer> tagIds = new ArrayList<>();
-        if (tags.length() > 0) {
-            tagIds = tagService.saveTag(tags);
-        }
+    public ResponseEntity<Post> savePost(@ModelAttribute("post") Post post, @RequestParam("Tags") String tags, PostTag postTag) {
+        try {
+            post = postService.savePost(post);
+            int postId = post.getId();
+            List<Integer> tagIds = new ArrayList<>();
+            if (tags.length() > 0) {
+                tagIds = tagService.saveTag(tags);
+            }
 
-        postTag.setPostId(postId);
-        if (tagIds.size() > 0) {
-            for (int tagId : tagIds) {
-                postTag.setTagId(tagId);
+            postTag.setPostId(postId);
+            if (tagIds.size() > 0) {
+                for (int tagId : tagIds) {
+                    postTag.setTagId(tagId);
+                    postTagService.savePostTag(postTag);
+                }
+            } else {
+                postTag.setTagId(0);
                 postTagService.savePostTag(postTag);
             }
-        } else {
-            postTag.setTagId(0);
-            postTagService.savePostTag(postTag);
+            return new ResponseEntity<>(post,HttpStatus.OK);
+        }catch(Exception e)
+        {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return "redirect:/";
     }
 
     @GetMapping("/fullPost/{postId}")
