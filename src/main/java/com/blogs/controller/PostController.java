@@ -127,13 +127,7 @@ public class PostController {
     public ResponseEntity<String> displayFullPost(@AuthenticationPrincipal UserDetailsImpl user, @PathVariable("postId") int postId, Model model) {
         try {
             Post post = postService.findPostById(postId);
-            model.addAttribute("post", post);
             List<Comment> comments = commentService.findCommentsByPostId(postId);
-           // model.addAttribute("comments", comments);
-
-            //if (user != null)
-             //   model.addAttribute("userName", user.getName());
-
             return new ResponseEntity<>(post.toString() +""+comments.toString(),HttpStatus.OK);
         } catch (Exception e) {
             return  new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
