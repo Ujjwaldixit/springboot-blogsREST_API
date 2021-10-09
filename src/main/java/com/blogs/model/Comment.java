@@ -1,5 +1,6 @@
 package com.blogs.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,10 +15,12 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @Entity
 @Table(name = "comment", schema = "blog")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
 
     private String name;
 

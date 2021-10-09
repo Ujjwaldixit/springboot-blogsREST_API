@@ -159,23 +159,22 @@ public class PostController {
     }
 
     @PostMapping("/addComment/{postId}")
-    public String addComment(@PathVariable("postId") int postId, Model model, Comment comment) {
-        model.addAttribute("_comment", comment);
-        model.addAttribute("postId", postId);
-        return "commentForm";
-    }
-
-    @PostMapping("/saveComment")
-    public String saveComment(@ModelAttribute("_comment") Comment comment) {
-        commentService.saveComment(comment);
-        return "redirect:/fullPost/" + comment.getPostId();
+    public ResponseEntity<?> saveComment(@RequestBody Comment comment) {
+        try {
+            commentService.saveComment(comment);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PutMapping("/updateComment/{commentId}")
-    public ResponseEntity<Comment> updateComment(@PathVariable("commentId") int commentId, Model model) {
+    public ResponseEntity<Comment> updateComment(@PathVariable("commentId") int commentId, @RequestBody Comment comment) {
         try {
-            Comment comment = commentService.findCommentById(commentId);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            comment.setId(commentService.findCommentById(commentId).getId());
+            System.out.println("comment1 "+comment );
+            commentService.saveComment(comment);
+            return new ResponseEntity<>(comment,HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
