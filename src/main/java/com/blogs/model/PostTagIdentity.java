@@ -11,7 +11,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class PostAndTagIdentity implements Serializable {
+public class PostTagIdentity implements Serializable {
 
     private int postId;
 

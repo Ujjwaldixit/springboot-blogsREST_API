@@ -12,6 +12,6 @@ import java.util.List;
 public class PostAndTags {
 
     private Post post;
-    
+
     private List<Tag> tags;
 }

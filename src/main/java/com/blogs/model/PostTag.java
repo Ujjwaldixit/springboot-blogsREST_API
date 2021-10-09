@@ -14,7 +14,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @Entity
 @Table(name = "post_tag", schema = "blog")
-@IdClass(PostAndTagIdentity.class)
+@IdClass(PostTagIdentity.class)
 public class PostTag {
 
     @Id

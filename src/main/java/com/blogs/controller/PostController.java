@@ -83,9 +83,11 @@ public class PostController {
 
     @PostMapping("/newPost")
     public ResponseEntity<Post> savePost(@AuthenticationPrincipal UserDetailsImpl user,
-                                         @RequestBody Post post,
-                                         @RequestBody List<Tag> tags,
+                                         @RequestBody PostAndTags postAndTags,
                                          PostTag postTag) {
+        Post post = postAndTags.getPost();
+
+        List<Tag> tags = postAndTags.getTags();
 
         try {
             post.setAuthor(user.getName());
