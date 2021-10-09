@@ -5,6 +5,7 @@ import com.blogs.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Service
@@ -15,6 +16,10 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void saveComment(Comment comment) {
+        if (comment.getCreatedAt() == null)
+            comment.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+
+        comment.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         commentRepository.save(comment);
     }
 

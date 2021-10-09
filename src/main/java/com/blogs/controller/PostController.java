@@ -159,8 +159,9 @@ public class PostController {
     }
 
     @PostMapping("/addComment/{postId}")
-    public ResponseEntity<?> saveComment(@RequestBody Comment comment) {
+    public ResponseEntity<?> saveComment(@RequestBody Comment comment,@PathVariable("postId")int postId) {
         try {
+            comment.setPostId(postId);
             commentService.saveComment(comment);
             return new ResponseEntity<>(HttpStatus.CREATED);
         }catch (Exception e){
@@ -168,11 +169,13 @@ public class PostController {
         }
     }
 
-    @PutMapping("/updateComment/{commentId}")
-    public ResponseEntity<Comment> updateComment(@PathVariable("commentId") int commentId, @RequestBody Comment comment) {
+    @PutMapping("/updateComment/{commentId}/{postId}")
+    public ResponseEntity<Comment> updateComment(@PathVariable("commentId") int commentId,@PathVariable("postId") int postId, @RequestBody Comment comment) {
         try {
+            comment.setPostId(postId);
             comment.setId(commentService.findCommentById(commentId).getId());
-            System.out.println("comment1 "+comment );
+            comment.setCreatedAt(commentService.findCommentById(commentId).getCreatedAt());
+
             commentService.saveComment(comment);
             return new ResponseEntity<>(comment,HttpStatus.NO_CONTENT);
         } catch (Exception e) {
@@ -181,7 +184,7 @@ public class PostController {
     }
 
     @DeleteMapping("/deleteComment/{commentId}/{postId}")
-    public ResponseEntity<Comment> deleteComment(@PathVariable("commentId") int commentId, @PathVariable("postId") int postID) {
+    public ResponseEntity<Comment> deleteComment(@PathVariable("commentId") int commentId, @PathVariable("postId") int postId) {
         try {
             commentService.deleteComment(commentId);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

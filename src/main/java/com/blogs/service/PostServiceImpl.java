@@ -26,6 +26,9 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Post savePost(Post post) {
+        if (post.getCreatedAt() == null)
+            post.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+
         post.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         post.setPublished(true);
         if (post.getContent().length() >= 100) {
