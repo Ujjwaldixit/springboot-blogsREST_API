@@ -10,7 +10,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -41,41 +40,44 @@ public class PostController {
         try {
             Page<Post> sortedAndPaginatedPosts = postService.findPostsWithPaginationAndSorting(
                     pageNo, pageSize, sortField, sortOrder);
+
             List<Post> posts = sortedAndPaginatedPosts.toList();
 
             if (searchKeyword != null) {
-                System.out.println("search1");
                 sortedAndPaginatedPosts = null;
                 posts = postService.findPostsByKeyword(searchKeyword);
-                System.out.println("search2 "+posts);
-                List<Tag> tags = tagService.findTagsByName(Arrays.asList(searchKeyword));
-                System.out.println("search3 "+tags);
+
+                List<Tag> tags = tagService.findTagsByName(List.of(searchKeyword));
+
                 if (tags != null) {
                     List<PostTag> postTags = postTagService.findPostTagsByTags(tags);
-                    System.out.println("search4 "+postTags);
+
                     posts = postService.findPostsByPostTag(postTags);
                 }
-                System.out.println("search5 "+posts);
             }
 
-        else if (authors != null || tagsName != null || publishedAt != null) {
+            if (authors != null || tagsName != null || publishedAt != null) {
                 sortedAndPaginatedPosts = null;
+
                 posts = new ArrayList<>();
+
                 if (authors != null) {
                     posts.addAll(postService.findPostsByAuthor(authors));
                 }
+
                 if (publishedAt != null) {
                     posts.addAll(postService.findPostsByPublishedAt(publishedAt));
                 }
+
                 if (tagsName != null) {
                     List<Tag> tags = tagService.findTagsByName(tagsName);
+
                     if (tags != null) {
                         List<PostTag> postTags = postTagService.findPostTagsByTags(tags);
                         posts.addAll(postService.findPostsByPostTag(postTags));
                     }
                 }
             }
-
             return new ResponseEntity<>(posts, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -86,6 +88,7 @@ public class PostController {
     public ResponseEntity<Post> savePost(@AuthenticationPrincipal UserDetailsImpl user,
                                          @RequestBody PostAndTags postAndTags,
                                          PostTag postTag) {
+
         Post post = postAndTags.getPost();
 
         List<Tag> tags = postAndTags.getTags();
@@ -101,8 +104,8 @@ public class PostController {
             if (tags.size() > 0) {
                 tagIds = tagService.saveTag(tags);
             }
-
             postTag.setPostId(postId);
+
             if (tagIds.size() > 0) {
                 for (int tagId : tagIds) {
                     postTag.setTagId(tagId);
@@ -144,21 +147,25 @@ public class PostController {
         try {
             Post post = postService.findPostById(id);
 
-            if(!user.getName().equals(post.getAuthor()))
+            if (!user.getName().equals(post.getAuthor()))
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
-            post.setTitle(postAndTags.getPost().getTitle());
-            post.setContent(postAndTags.getPost().getContent());
+            if (postAndTags.getPost().getTitle() != null)
+                post.setTitle(postAndTags.getPost().getTitle());
+
+            if (postAndTags.getPost().getContent() != null)
+                post.setContent(postAndTags.getPost().getContent());
 
             List<PostTag> postTags = postTagService.findPostTagsByPostId(id);
 
             tagService.saveTag(postAndTags.getTags());
-
             postTagService.deletePostTags(postTags);
+            postTagService.savePostTags(postAndTags.getPost().getId(),postAndTags.getTags());
             postService.savePost(post);
 
             return new ResponseEntity<>(postAndTags, HttpStatus.CREATED);
         } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -181,6 +188,7 @@ public class PostController {
         try {
             comment.setPostId(postId);
             commentService.saveComment(comment);
+
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -198,6 +206,7 @@ public class PostController {
             comment.setCreatedAt(commentService.findCommentById(commentId).getCreatedAt());
 
             commentService.saveComment(comment);
+
             return new ResponseEntity<>(comment, HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -209,6 +218,7 @@ public class PostController {
                                                  @PathVariable("postId") int postId) {
         try {
             commentService.deleteComment(commentId);
+
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
