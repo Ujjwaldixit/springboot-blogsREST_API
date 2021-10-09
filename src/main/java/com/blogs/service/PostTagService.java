@@ -12,7 +12,7 @@ public interface PostTagService {
 
     List<PostTag> findPostTagsByPostId(int postId);
 
-    void deletePostTag(List<PostTag> postAndTags);
+    void deletePostTags(List<PostTag> postAndTag);
 
     List<PostTag> findPostTagsByTags(List<Tag> tag);
 }

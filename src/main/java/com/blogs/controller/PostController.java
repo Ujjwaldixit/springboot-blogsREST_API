@@ -7,7 +7,6 @@ import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -132,16 +131,15 @@ public class PostController {
     }
 
     @PutMapping("/updatePost/{postId}")
-    public String updatePost(@PathVariable("postId") int id, @RequestBody PostAndTags postAndTags) {
+    public ResponseEntity<?> updatePost(@PathVariable("postId") int id, @RequestBody PostAndTags postAndTags) {
         try {
             Post post = postService.findPostById(id);
 
             List<PostTag> postTags = postTagService.findPostTagsByPostId(id);
-            postTagService.deletePostTag(postTags);
-            List<Tag> tags = tagService.getAllTags();
-            return null;
+            postTagService.deletePostTags(postTags);
+            return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (Exception e) {
-            return null;
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -149,7 +147,7 @@ public class PostController {
     public ResponseEntity<?> deletePost(@PathVariable("postId") int postId) {
         try {
             postService.deletePost(postId);
-            postTagService.deletePostTag(postTagService.findPostTagsByPostId(postId));
+            postTagService.deletePostTags(postTagService.findPostTagsByPostId(postId));
 
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
