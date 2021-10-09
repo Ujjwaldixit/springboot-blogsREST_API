@@ -1,5 +1,6 @@
 package com.blogs.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,6 +16,7 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "post_tag", schema = "blog")
 @IdClass(PostTagIdentity.class)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class PostTag {
 
     @Id

@@ -39,20 +39,26 @@ public class PostController {
                                                @RequestParam(value = "publishedAt", required = false) List<String> publishedAt) {
 
         try {
-            Page<Post> sortedAndPaginatedPosts = postService.findPostsWithPaginationAndSorting(pageNo, pageSize, sortField, sortOrder);
+            Page<Post> sortedAndPaginatedPosts = postService.findPostsWithPaginationAndSorting(
+                    pageNo, pageSize, sortField, sortOrder);
             List<Post> posts = sortedAndPaginatedPosts.toList();
 
             if (searchKeyword != null) {
+                System.out.println("search1");
                 sortedAndPaginatedPosts = null;
                 posts = postService.findPostsByKeyword(searchKeyword);
+                System.out.println("search2 "+posts);
                 List<Tag> tags = tagService.findTagsByName(Arrays.asList(searchKeyword));
+                System.out.println("search3 "+tags);
                 if (tags != null) {
                     List<PostTag> postTags = postTagService.findPostTagsByTags(tags);
+                    System.out.println("search4 "+postTags);
                     posts = postService.findPostsByPostTag(postTags);
                 }
+                System.out.println("search5 "+posts);
             }
 
-            if (authors != null || tagsName != null || publishedAt != null) {
+        else if (authors != null || tagsName != null || publishedAt != null) {
                 sortedAndPaginatedPosts = null;
                 posts = new ArrayList<>();
                 if (authors != null) {
@@ -114,7 +120,8 @@ public class PostController {
     }
 
     @GetMapping("/fullPost/{postId}")
-    public ResponseEntity<PostAndComments> displayFullPost(@AuthenticationPrincipal UserDetailsImpl user, @PathVariable("postId") int postId) {
+    public ResponseEntity<PostAndComments> displayFullPost(@AuthenticationPrincipal UserDetailsImpl user,
+                                                           @PathVariable("postId") int postId) {
         try {
             Post post = postService.findPostById(postId);
 
@@ -131,13 +138,26 @@ public class PostController {
     }
 
     @PutMapping("/updatePost/{postId}")
-    public ResponseEntity<?> updatePost(@PathVariable("postId") int id, @RequestBody PostAndTags postAndTags) {
+    public ResponseEntity<?> updatePost(@AuthenticationPrincipal UserDetailsImpl user,
+                                        @PathVariable("postId") int id,
+                                        @RequestBody PostAndTags postAndTags) {
         try {
             Post post = postService.findPostById(id);
 
+            if(!user.getName().equals(post.getAuthor()))
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
+            post.setTitle(postAndTags.getPost().getTitle());
+            post.setContent(postAndTags.getPost().getContent());
+
             List<PostTag> postTags = postTagService.findPostTagsByPostId(id);
+
+            tagService.saveTag(postAndTags.getTags());
+
             postTagService.deletePostTags(postTags);
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            postService.savePost(post);
+
+            return new ResponseEntity<>(postAndTags, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -156,7 +176,8 @@ public class PostController {
     }
 
     @PostMapping("/addComment/{postId}")
-    public ResponseEntity<?> saveComment(@RequestBody Comment comment, @PathVariable("postId") int postId) {
+    public ResponseEntity<?> saveComment(@RequestBody Comment comment,
+                                         @PathVariable("postId") int postId) {
         try {
             comment.setPostId(postId);
             commentService.saveComment(comment);
@@ -167,7 +188,10 @@ public class PostController {
     }
 
     @PutMapping("/updateComment/{commentId}/{postId}")
-    public ResponseEntity<Comment> updateComment(@PathVariable("commentId") int commentId, @PathVariable("postId") int postId, @RequestBody Comment comment) {
+    public ResponseEntity<Comment> updateComment(@AuthenticationPrincipal UserDetailsImpl user,
+                                                 @PathVariable("commentId") int commentId,
+                                                 @PathVariable("postId") int postId,
+                                                 @RequestBody Comment comment) {
         try {
             comment.setPostId(postId);
             comment.setId(commentService.findCommentById(commentId).getId());
@@ -181,7 +205,8 @@ public class PostController {
     }
 
     @DeleteMapping("/deleteComment/{commentId}/{postId}")
-    public ResponseEntity<Comment> deleteComment(@PathVariable("commentId") int commentId, @PathVariable("postId") int postId) {
+    public ResponseEntity<Comment> deleteComment(@PathVariable("commentId") int commentId,
+                                                 @PathVariable("postId") int postId) {
         try {
             commentService.deleteComment(commentId);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
