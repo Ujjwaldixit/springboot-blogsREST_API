@@ -55,14 +55,12 @@ public class PostController {
             }
 
             if (authors != null || tagsName != null || publishedAt != null) {
-                System.out.println("publishedAt1");
                 sortedAndPaginatedPosts = null;
                 posts = new ArrayList<>();
                 if (authors != null) {
                     posts.addAll(postService.findPostsByAuthor(authors));
                 }
                 if (publishedAt != null) {
-                    System.out.println("publishedAt2");
                     posts.addAll(postService.findPostsByPublishedAt(publishedAt));
                 }
                 if (tagsName != null) {
@@ -70,7 +68,6 @@ public class PostController {
                     if (tags != null) {
                         List<PostTag> postTags = postTagService.findPostTagsByTags(tags);
                         posts.addAll(postService.findPostsByPostTag(postTags));
-
                     }
                 }
             }
@@ -119,7 +116,7 @@ public class PostController {
     }
 
     @GetMapping("/fullPost/{postId}")
-    public ResponseEntity<String> displayFullPost(@AuthenticationPrincipal UserDetailsImpl user, @PathVariable("postId") int postId, Model model) {
+    public ResponseEntity<String> displayFullPost(@AuthenticationPrincipal UserDetailsImpl user, @PathVariable("postId") int postId) {
         try {
             Post post = postService.findPostById(postId);
 
