@@ -116,13 +116,17 @@ public class PostController {
     }
 
     @GetMapping("/fullPost/{postId}")
-    public ResponseEntity<String> displayFullPost(@AuthenticationPrincipal UserDetailsImpl user, @PathVariable("postId") int postId) {
+    public ResponseEntity<PostAndComments> displayFullPost(@AuthenticationPrincipal UserDetailsImpl user, @PathVariable("postId") int postId) {
         try {
             Post post = postService.findPostById(postId);
 
-            List<Comment> comments = commentService.findCommentsByPostId(postId);
+            List<Comment> comments =new ArrayList<>();
 
-            return new ResponseEntity<>(post.toString() + "" + comments.toString(), HttpStatus.OK);
+            comments= commentService.findCommentsByPostId(postId);
+
+            PostAndComments postAndComments=new PostAndComments(post,comments);
+
+            return new ResponseEntity<>(postAndComments, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -154,7 +158,7 @@ public class PostController {
         }
     }
 
-    @GetMapping("/addComment/{postId}")
+    @PostMapping("/addComment/{postId}")
     public String addComment(@PathVariable("postId") int postId, Model model, Comment comment) {
         model.addAttribute("_comment", comment);
         model.addAttribute("postId", postId);
