@@ -27,8 +27,8 @@ public class PostTagServiceImpl implements PostTagService {
     }
 
     @Override
-    public void deletePostTag(PostTag postTag) {
-        postTagRepository.delete(postTag);
+    public void deletePostTag(List<PostTag> postAndTags) {
+        postTagRepository.deleteAll(postAndTags);
     }
 
     @Override

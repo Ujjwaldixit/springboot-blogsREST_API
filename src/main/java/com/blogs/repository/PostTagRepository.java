@@ -12,4 +12,6 @@ public interface PostTagRepository extends JpaRepository<PostTag, PostTagIdentit
     List<PostTag> findPostTagByPostId(int postId);
 
     List<PostTag> findPostTagByTagId(int tagId);
+
+    void deleteAll(List<PostTag> postTag);
 }

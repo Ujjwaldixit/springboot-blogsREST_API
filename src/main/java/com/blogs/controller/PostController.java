@@ -37,8 +37,7 @@ public class PostController {
                                                @RequestParam(value = "search", required = false) String searchKeyword,
                                                @RequestParam(value = "author", required = false) List<String> authors,
                                                @RequestParam(value = "tag", required = false) List<String> tagsName,
-                                               @RequestParam(value = "publishedAt", required = false) List<String> publishedAt,
-                                               Model model) {
+                                               @RequestParam(value = "publishedAt", required = false) List<String> publishedAt) {
 
         try {
             Page<Post> sortedAndPaginatedPosts = postService.findPostsWithPaginationAndSorting(pageNo, pageSize, sortField, sortOrder);
@@ -120,11 +119,11 @@ public class PostController {
         try {
             Post post = postService.findPostById(postId);
 
-            List<Comment> comments =new ArrayList<>();
+            List<Comment> comments = new ArrayList<>();
 
-            comments= commentService.findCommentsByPostId(postId);
+            comments = commentService.findCommentsByPostId(postId);
 
-            PostAndComments postAndComments=new PostAndComments(post,comments);
+            PostAndComments postAndComments = new PostAndComments(post, comments);
 
             return new ResponseEntity<>(postAndComments, HttpStatus.OK);
         } catch (Exception e) {
@@ -132,11 +131,13 @@ public class PostController {
         }
     }
 
-    @GetMapping("/updatePost/{postId}")
-    public String updatePost(@PathVariable("postId") int id, Model model) {
+    @PutMapping("/updatePost/{postId}")
+    public String updatePost(@PathVariable("postId") int id, @RequestBody PostAndTags postAndTags) {
         try {
             Post post = postService.findPostById(id);
 
+            List<PostTag> postTags = postTagService.findPostTagsByPostId(id);
+            postTagService.deletePostTag(postTags);
             List<Tag> tags = tagService.getAllTags();
             return null;
         } catch (Exception e) {
@@ -148,10 +149,8 @@ public class PostController {
     public ResponseEntity<?> deletePost(@PathVariable("postId") int postId) {
         try {
             postService.deletePost(postId);
-            List<PostTag> postTags = postTagService.findPostTagsByPostId(postId);
-            for (PostTag postTag : postTags) {
-                postTagService.deletePostTag(postTag);
-            }
+            postTagService.deletePostTag(postTagService.findPostTagsByPostId(postId));
+
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -159,25 +158,25 @@ public class PostController {
     }
 
     @PostMapping("/addComment/{postId}")
-    public ResponseEntity<?> saveComment(@RequestBody Comment comment,@PathVariable("postId")int postId) {
+    public ResponseEntity<?> saveComment(@RequestBody Comment comment, @PathVariable("postId") int postId) {
         try {
             comment.setPostId(postId);
             commentService.saveComment(comment);
             return new ResponseEntity<>(HttpStatus.CREATED);
-        }catch (Exception e){
+        } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PutMapping("/updateComment/{commentId}/{postId}")
-    public ResponseEntity<Comment> updateComment(@PathVariable("commentId") int commentId,@PathVariable("postId") int postId, @RequestBody Comment comment) {
+    public ResponseEntity<Comment> updateComment(@PathVariable("commentId") int commentId, @PathVariable("postId") int postId, @RequestBody Comment comment) {
         try {
             comment.setPostId(postId);
             comment.setId(commentService.findCommentById(commentId).getId());
             comment.setCreatedAt(commentService.findCommentById(commentId).getCreatedAt());
 
             commentService.saveComment(comment);
-            return new ResponseEntity<>(comment,HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(comment, HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
