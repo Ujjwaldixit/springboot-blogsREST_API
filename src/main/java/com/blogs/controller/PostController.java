@@ -117,44 +117,52 @@ public class PostController {
                 postTag.setTagId(0);
                 postTagService.savePostTag(postTag);
             }
-            return new ResponseEntity<>(post,HttpStatus.OK);
-        }catch(Exception e)
-        {
+            return new ResponseEntity<>(post, HttpStatus.CREATED);
+        } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("/fullPost/{postId}")
-    public String displayFullPost(@AuthenticationPrincipal UserDetailsImpl user, @PathVariable("postId") int postId, Model model) {
-        Post post = postService.findPostById(postId);
-        model.addAttribute("post", post);
-        List<Comment> comments = commentService.findCommentsByPostId(postId);
-        model.addAttribute("comments", comments);
+    public ResponseEntity<String> displayFullPost(@AuthenticationPrincipal UserDetailsImpl user, @PathVariable("postId") int postId, Model model) {
+        try {
+            Post post = postService.findPostById(postId);
+            model.addAttribute("post", post);
+            List<Comment> comments = commentService.findCommentsByPostId(postId);
+           // model.addAttribute("comments", comments);
 
-        if (user != null)
-            model.addAttribute("userName", user.getName());
+            //if (user != null)
+             //   model.addAttribute("userName", user.getName());
 
-        return "fullPost";
+            return new ResponseEntity<>(post.toString() +""+comments.toString(),HttpStatus.OK);
+        } catch (Exception e) {
+            return  new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping("/updatePost/{postId}")
     public String updatePost(@PathVariable("postId") int id, Model model) {
-        Post post = postService.findPostById(id);
-        model.addAttribute("post", post);
-
-        List<Tag> tags = tagService.getAllTags();
-        model.addAttribute("tags", tags);
-        return "newPost";
+        try {
+            Post post = postService.findPostById(id);
+            List<Tag> tags = tagService.getAllTags();
+            return null;
+        }catch (Exception e){
+            return  null;
+        }
     }
 
-    @GetMapping("/deletePost/{postId}")
-    public String deletePost(@PathVariable("postId") int postId) {
-        postService.deletePost(postId);
-        List<PostTag> postTags = postTagService.findPostTagsByPostId(postId);
-        for (PostTag postTag : postTags) {
-            postTagService.deletePostTag(postTag);
+    @DeleteMapping("/deletePost/{postId}")
+    public ResponseEntity<Post> deletePost(@PathVariable("postId") int postId) {
+        try {
+            postService.deletePost(postId);
+            List<PostTag> postTags = postTagService.findPostTagsByPostId(postId);
+            for (PostTag postTag : postTags) {
+                postTagService.deletePostTag(postTag);
+            }
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        }catch (Exception e){
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
-        return "redirect:/";
     }
 
     @GetMapping("/addComment/{postId}")
@@ -170,16 +178,23 @@ public class PostController {
         return "redirect:/fullPost/" + comment.getPostId();
     }
 
-    @GetMapping("/updateComment/{commentId}")
-    public String updateComment(@PathVariable("commentId") int commentId, Model model) {
-        Comment comment = commentService.findCommentById(commentId);
-        model.addAttribute("_comment", comment);
-        return "commentForm";
+    @PutMapping("/updateComment/{commentId}")
+    public ResponseEntity<Comment> updateComment(@PathVariable("commentId") int commentId, Model model) {
+        try {
+            Comment comment = commentService.findCommentById(commentId);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-    @GetMapping("/deleteComment/{commentId}/{postId}")
-    public String deleteComment(@PathVariable("commentId") int commentId, @PathVariable("postId") int postID) {
-        commentService.deleteComment(commentId);
-        return "redirect:/fullPost/" + postID;
+    @DeleteMapping("/deleteComment/{commentId}/{postId}")
+    public ResponseEntity<Comment> deleteComment(@PathVariable("commentId") int commentId, @PathVariable("postId") int postID) {
+        try {
+            commentService.deleteComment(commentId);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
