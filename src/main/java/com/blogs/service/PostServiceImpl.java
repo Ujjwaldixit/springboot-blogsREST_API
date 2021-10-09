@@ -27,6 +27,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public Post savePost(Post post) {
         post.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+        post.setPublished(true);
         if (post.getContent().length() >= 100) {
             post.setExcerpt(post.getContent().substring(0, 90));
         } else {

@@ -7,13 +7,9 @@ import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.concurrent.SuccessCallback;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Status;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -88,22 +84,21 @@ public class PostController {
         }
     }
 
-    @GetMapping("/showNewPostForm")
-    public String newPost(@AuthenticationPrincipal UserDetailsImpl user, Model model, Post post) {
-        post.setAuthor(user.getName());
-        model.addAttribute("post", post);
-        List<Tag> tags = tagService.getAllTags();
-        model.addAttribute("tags", tags);
-        return "/newPost";
-    }
+    @PostMapping("/newPost")
+    public ResponseEntity<Post> savePost(@AuthenticationPrincipal UserDetailsImpl user,
+                                         @RequestBody Post post,
+                                         @RequestBody List<Tag> tags,
+                                         PostTag postTag) {
 
-    @PostMapping("/savePost")
-    public ResponseEntity<Post> savePost(@ModelAttribute("post") Post post, @RequestParam("Tags") String tags, PostTag postTag) {
         try {
+            post.setAuthor(user.getName());
             post = postService.savePost(post);
+
             int postId = post.getId();
+
             List<Integer> tagIds = new ArrayList<>();
-            if (tags.length() > 0) {
+
+            if (tags.size() > 0) {
                 tagIds = tagService.saveTag(tags);
             }
 
@@ -117,6 +112,7 @@ public class PostController {
                 postTag.setTagId(0);
                 postTagService.savePostTag(postTag);
             }
+
             return new ResponseEntity<>(post, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -128,9 +124,9 @@ public class PostController {
         try {
             Post post = postService.findPostById(postId);
             List<Comment> comments = commentService.findCommentsByPostId(postId);
-            return new ResponseEntity<>(post.toString() +""+comments.toString(),HttpStatus.OK);
+            return new ResponseEntity<>(post.toString() + "" + comments.toString(), HttpStatus.OK);
         } catch (Exception e) {
-            return  new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -140,13 +136,13 @@ public class PostController {
             Post post = postService.findPostById(id);
             List<Tag> tags = tagService.getAllTags();
             return null;
-        }catch (Exception e){
-            return  null;
+        } catch (Exception e) {
+            return null;
         }
     }
 
     @DeleteMapping("/deletePost/{postId}")
-    public ResponseEntity<Post> deletePost(@PathVariable("postId") int postId) {
+    public ResponseEntity deletePost(@PathVariable("postId") int postId) {
         try {
             postService.deletePost(postId);
             List<PostTag> postTags = postTagService.findPostTagsByPostId(postId);
@@ -154,7 +150,7 @@ public class PostController {
                 postTagService.deletePostTag(postTag);
             }
             return new ResponseEntity(HttpStatus.NO_CONTENT);
-        }catch (Exception e){
+        } catch (Exception e) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
     }
@@ -177,7 +173,7 @@ public class PostController {
         try {
             Comment comment = commentService.findCommentById(commentId);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }catch (Exception e){
+        } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -187,7 +183,7 @@ public class PostController {
         try {
             commentService.deleteComment(commentId);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }catch (Exception e){
+        } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

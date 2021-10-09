@@ -25,18 +25,17 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<Integer> saveTag(String tag) {
+    public List<Integer> saveTag(List<Tag> tags) {
         List<Integer> tagIds = new ArrayList<>();
         Tag tagCheck = null;
-        String tags[] = tag.split(",");
-        HashSet<String> _tags = new HashSet<>(Arrays.asList(tags));
-        for (String s : _tags) {
-            tagCheck = tagRepository.findByName(s);
+        HashSet<Tag> uniqueTags = new HashSet<>(tags);
+        for (Tag tag : uniqueTags) {
+            tagCheck = tagRepository.findByName(tag.getName());
             if (tagCheck == null) {
                 Tag newTag = new Tag();
-                newTag.setName(s);
+                newTag.setName(tag.getName());
                 this.tagRepository.save(newTag);
-                tagCheck = tagRepository.findByName(s);
+                tagCheck = tagRepository.findByName(tag.getName());
             }
             tagIds.add(tagCheck.getId());
         }

@@ -9,7 +9,7 @@ import java.util.List;
 public interface TagService {
     List<Tag> getAllTags();
 
-    List<Integer> saveTag(String tag);
+    List<Integer> saveTag(List<Tag> tags);
 
-    List<Tag> findTagsByName(List<String> tagName);
+    List<Tag> findTagsByName(List<String> tagNames);
 }
