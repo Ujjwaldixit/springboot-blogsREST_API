@@ -16,12 +16,16 @@ import java.util.List;
 
 @RestController
 public class PostController {
+
     @Autowired
     private PostService postService;
+
     @Autowired
     private TagService tagService;
+
     @Autowired
     private PostTagService postTagService;
+
     @Autowired
     private CommentService commentService;
 
@@ -71,13 +75,6 @@ public class PostController {
                 }
             }
 
-            if (sortedAndPaginatedPosts != null)
-                model.addAttribute("totalPages", sortedAndPaginatedPosts.getTotalPages());
-
-            model.addAttribute("posts", posts);
-            model.addAttribute("start", pageNo);
-            model.addAttribute("limit", pageSize);
-            model.addAttribute("keyword", searchKeyword);
             return new ResponseEntity<>(posts, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -123,7 +120,9 @@ public class PostController {
     public ResponseEntity<String> displayFullPost(@AuthenticationPrincipal UserDetailsImpl user, @PathVariable("postId") int postId, Model model) {
         try {
             Post post = postService.findPostById(postId);
+
             List<Comment> comments = commentService.findCommentsByPostId(postId);
+
             return new ResponseEntity<>(post.toString() + "" + comments.toString(), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -134,6 +133,7 @@ public class PostController {
     public String updatePost(@PathVariable("postId") int id, Model model) {
         try {
             Post post = postService.findPostById(id);
+
             List<Tag> tags = tagService.getAllTags();
             return null;
         } catch (Exception e) {
@@ -142,16 +142,16 @@ public class PostController {
     }
 
     @DeleteMapping("/deletePost/{postId}")
-    public ResponseEntity deletePost(@PathVariable("postId") int postId) {
+    public ResponseEntity<?> deletePost(@PathVariable("postId") int postId) {
         try {
             postService.deletePost(postId);
             List<PostTag> postTags = postTagService.findPostTagsByPostId(postId);
             for (PostTag postTag : postTags) {
                 postTagService.deletePostTag(postTag);
             }
-            return new ResponseEntity(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
