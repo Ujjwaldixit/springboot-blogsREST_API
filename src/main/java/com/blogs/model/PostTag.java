@@ -18,7 +18,6 @@ import java.sql.Timestamp;
 @IdClass(PostTagIdentity.class)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class PostTag {
-
     @Id
     private int postId;
 

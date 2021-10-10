@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
+
     @Autowired
     private UserRepository userRepository;
 
@@ -15,9 +16,12 @@ public class UserServiceImpl implements UserService {
     public boolean register(User user) {
         if (user != null && !userRepository.existsById(user.getEmail())) {
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
             String encodedPassword = passwordEncoder.encode(user.getPassword());
+
             user.setPassword(encodedPassword);
             userRepository.save(user);
+
             return true;
         } else {
             return false;

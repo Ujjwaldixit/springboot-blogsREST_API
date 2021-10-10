@@ -6,9 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.net.Inet4Address;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
@@ -27,34 +25,40 @@ public class TagServiceImpl implements TagService {
     @Override
     public List<Integer> saveTag(List<Tag> tags) {
         List<Integer> tagIds = new ArrayList<>();
-        Tag tagCheck = null;
+
         HashSet<Tag> uniqueTags = new HashSet<>(tags);
+
         for (Tag tag : uniqueTags) {
-            tagCheck = tagRepository.findByName(tag.getName());
-            if (tagCheck == null) {
+            tag = tagRepository.findByName(tag.getName());
+            if (tag == null) {
                 Tag newTag = new Tag();
                 newTag.setName(tag.getName());
                 this.tagRepository.save(newTag);
-                tagCheck = tagRepository.findByName(tag.getName());
+                tag = tagRepository.findByName(tag.getName());
             }
-            tagIds.add(tagCheck.getId());
+            tagIds.add(tag.getId());
         }
+
         return tagIds;
     }
 
     @Override
-    public List<Tag> findTagsByName(List<String> tagsName) {
+    public List<Tag> findTagsByName(List<String> tagsNames) {
         List<Tag> tags = new ArrayList<>();
-        for (String tagName : tagsName)
+
+        for (String tagName : tagsNames)
             tags.addAll(tagRepository.findTagByNameLike(tagName));
+
         return tags;
     }
 
     @Override
     public List<Tag> findTagsByIds(List<Integer> tagsIds) {
-        List<Tag> tags=new ArrayList<>();
-        for(int tagId:tagsIds)
+        List<Tag> tags = new ArrayList<>();
+
+        for (int tagId : tagsIds)
             tags.add(tagRepository.getOne(tagId));
+
         return tags;
     }
 }

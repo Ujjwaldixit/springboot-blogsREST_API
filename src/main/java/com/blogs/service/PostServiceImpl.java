@@ -87,14 +87,12 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<Post> findPostsByPublishedAt(List<String> publishedAt) {
-        System.out.println("publishedAt size" + publishedAt.size());
+
         List<Post> posts = new ArrayList<>();
+
         for (String publishAt : publishedAt) {
-            System.out.println("loop");
-            System.out.println(publishAt + "  pos  " + postRepository.findByPublishedAt(Timestamp.valueOf(publishAt)));
             posts.addAll(postRepository.findByPublishedAt(Timestamp.valueOf(publishAt)));
         }
-        System.out.print("posts=" + posts);
         return posts;
     }
 }

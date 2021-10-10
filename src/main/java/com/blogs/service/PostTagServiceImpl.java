@@ -36,9 +36,11 @@ public class PostTagServiceImpl implements PostTagService {
     @Override
     public List<PostTag> findPostTagsByTags(List<Tag> tags) {
         List<PostTag> postTags = new ArrayList<>();
+
         for (Tag tag : tags) {
             postTags.addAll(postTagRepository.findPostTagByTagId(tag.getId()));
         }
+
         return postTags;
     }
 

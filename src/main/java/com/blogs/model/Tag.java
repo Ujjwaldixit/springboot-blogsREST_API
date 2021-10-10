@@ -17,7 +17,6 @@ import java.sql.Timestamp;
 @Table(name = "tag", schema = "blog")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Tag {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
