@@ -171,10 +171,17 @@ public class PostController {
     }
 
     @DeleteMapping("/deletePost/{postId}")
-    public ResponseEntity<?> deletePost(@PathVariable("postId") int postId) {
+    public ResponseEntity<?> deletePost(@AuthenticationPrincipal UserDetailsImpl user,
+                                        @PathVariable("postId") int postId) {
         try {
+            Post post=postService.findPostById(postId);
+
+            if (!user.getName().equals(post.getAuthor()))
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
             postService.deletePost(postId);
             postTagService.deletePostTags(postTagService.findPostTagsByPostId(postId));
+            commentService.deleteCommentByPostId(postId);
 
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
