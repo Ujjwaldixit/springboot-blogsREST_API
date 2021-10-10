@@ -194,6 +194,7 @@ public class PostController {
                                          @PathVariable("postId") int postId) {
         try {
             comment.setPostId(postId);
+
             commentService.saveComment(comment);
 
             return new ResponseEntity<>(HttpStatus.CREATED);
@@ -208,6 +209,11 @@ public class PostController {
                                                  @PathVariable("postId") int postId,
                                                  @RequestBody Comment comment) {
         try {
+            Post post=postService.findPostById(postId);
+
+            if (!user.getName().equals(post.getAuthor()))
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
             comment.setPostId(postId);
             comment.setId(commentService.findCommentById(commentId).getId());
             comment.setCreatedAt(commentService.findCommentById(commentId).getCreatedAt());
@@ -221,9 +227,15 @@ public class PostController {
     }
 
     @DeleteMapping("/deleteComment/{commentId}/{postId}")
-    public ResponseEntity<Comment> deleteComment(@PathVariable("commentId") int commentId,
+    public ResponseEntity<Comment> deleteComment(@AuthenticationPrincipal UserDetailsImpl user,
+                                                 @PathVariable("commentId") int commentId,
                                                  @PathVariable("postId") int postId) {
         try {
+            Post post=postService.findPostById(postId);
+
+            if (!user.getName().equals(post.getAuthor()))
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
             commentService.deleteComment(commentId);
 
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

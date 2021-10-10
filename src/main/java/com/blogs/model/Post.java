@@ -28,6 +28,8 @@ public class Post {
 
     private String author;
 
+    private int authorId;
+
     @CreationTimestamp
     private Timestamp publishedAt;
 
