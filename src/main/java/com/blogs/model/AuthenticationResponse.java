@@ -1,6 +1,7 @@
 package com.blogs.model;
 
-public class AuthenticationResponse {
+public class
+AuthenticationResponse {
 
     private String jwt;
 

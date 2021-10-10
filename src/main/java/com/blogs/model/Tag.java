@@ -14,7 +14,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "tag", schema = "blog")
+@Table(name = "tag")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Tag {
     @Id
