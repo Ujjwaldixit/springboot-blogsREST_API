@@ -33,8 +33,8 @@ public class PostController {
                                                @RequestParam(value = "sortField", defaultValue = "publishedAt") String sortField,
                                                @RequestParam(value = "order", defaultValue = "asc") String sortOrder,
                                                @RequestParam(value = "search", required = false) String searchKeyword,
-                                               @RequestParam(value = "author", required = false) List<String> authors,
-                                               @RequestParam(value = "tag", required = false) List<String> tagsName,
+                                               @RequestParam(value = "authorId", required = false) List<Integer> authorIds,
+                                               @RequestParam(value = "tagId", required = false) List<Integer> tagsIds,
                                                @RequestParam(value = "publishedAt", required = false) List<String> publishedAt) {
 
         try {
@@ -56,21 +56,21 @@ public class PostController {
                 }
             }
 
-            if (authors != null || tagsName != null || publishedAt != null) {
+            if (authorIds != null || tagsIds != null || publishedAt != null) {
                 sortedAndPaginatedPosts = null;
 
                 posts = new ArrayList<>();
 
-                if (authors != null) {
-                    posts.addAll(postService.findPostsByAuthor(authors));
+                if (authorIds != null) {
+                    posts.addAll(postService.findPostsByAuthorId(authorIds));
                 }
 
                 if (publishedAt != null) {
                     posts.addAll(postService.findPostsByPublishedAt(publishedAt));
                 }
 
-                if (tagsName != null) {
-                    List<Tag> tags = tagService.findTagsByName(tagsName);
+                if (tagsIds != null) {
+                    List<Tag> tags = tagService.findTagsByIds(tagsIds);
 
                     if (tags != null) {
                         List<PostTag> postTags = postTagService.findPostTagsByTags(tags);
@@ -88,13 +88,13 @@ public class PostController {
     public ResponseEntity<Post> savePost(@AuthenticationPrincipal UserDetailsImpl user,
                                          @RequestBody PostAndTags postAndTags,
                                          PostTag postTag) {
-
         Post post = postAndTags.getPost();
 
         List<Tag> tags = postAndTags.getTags();
 
         try {
             post.setAuthor(user.getName());
+            post.setAuthorId(user.getUserId());
             post = postService.savePost(post);
 
             int postId = post.getId();
@@ -147,7 +147,10 @@ public class PostController {
         try {
             Post post = postService.findPostById(id);
 
-            if (!user.getName().equals(post.getAuthor()))
+            if(post==null)
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+            if (user.getUserId()!=post.getAuthorId())
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
             if (postAndTags.getPost().getTitle() != null)
@@ -176,7 +179,13 @@ public class PostController {
         try {
             Post post=postService.findPostById(postId);
 
-            if (!user.getName().equals(post.getAuthor()))
+            if(post==null)
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+            if(post==null)
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+            if (user.getUserId()!=post.getAuthorId())
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
             postService.deletePost(postId);
@@ -185,7 +194,7 @@ public class PostController {
 
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -193,6 +202,11 @@ public class PostController {
     public ResponseEntity<?> saveComment(@RequestBody Comment comment,
                                          @PathVariable("postId") int postId) {
         try {
+            Post post=postService.findPostById(postId);
+
+            if(post==null)
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
             comment.setPostId(postId);
 
             commentService.saveComment(comment);
@@ -211,7 +225,10 @@ public class PostController {
         try {
             Post post=postService.findPostById(postId);
 
-            if (!user.getName().equals(post.getAuthor()))
+            if(post==null)
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+            if (user.getUserId()!=post.getAuthorId())
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
             comment.setPostId(postId);
@@ -233,7 +250,10 @@ public class PostController {
         try {
             Post post=postService.findPostById(postId);
 
-            if (!user.getName().equals(post.getAuthor()))
+            if(post==null)
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+            if (user.getUserId()!=post.getAuthorId())
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
             commentService.deleteComment(commentId);

@@ -49,4 +49,11 @@ public class TagServiceImpl implements TagService {
             tags.addAll(tagRepository.findTagByNameLike(tagName));
         return tags;
     }
+
+    @Override
+    public List<Tag> findTagsByIds(List<Integer> tagsIds) {
+        List<Tag> tags=new ArrayList<>();
+        for(int tagId:tagsIds)
+            tags.add(tagRepository.getOne(tagId));
+    }
 }

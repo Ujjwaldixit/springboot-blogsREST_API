@@ -20,7 +20,7 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
 
     List<Post> findByExcerptLike(String keyword);
 
-    List<Post> findByAuthor(String author);
+    List<Post> findByAuthorId(int authorId);
 
     List<Post> findByPublishedAt(Timestamp publishedAt);
 }
