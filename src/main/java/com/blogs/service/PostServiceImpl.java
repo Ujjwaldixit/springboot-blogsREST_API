@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -86,13 +88,17 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> findPostsByPublishedAt(List<String> publishedAt) {
+    public List<Post> findPostByPublishedTime(String publishedTime) {
+        return postRepository.findPostByTime(publishedTime);
+    }
 
-        List<Post> posts = new ArrayList<>();
+    @Override
+    public List<Post> findPostByPublishedDate(String publishedDate) throws ParseException {
+        return postRepository.findPostByDate(LocalDate.parse(publishedDate));
+    }
 
-        for (String publishAt : publishedAt) {
-            posts.addAll(postRepository.findByPublishedAt(Timestamp.valueOf(publishAt)));
-        }
-        return posts;
+    @Override
+    public List<Post> findPostByPublishedDateTime(Timestamp publishedDateTime) {
+        return postRepository.findByPublishedAt(publishedDateTime);
     }
 }

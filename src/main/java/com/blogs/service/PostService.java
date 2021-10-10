@@ -8,6 +8,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -28,5 +29,10 @@ public interface PostService {
 
     List<Post> findPostsByAuthorId(List<Integer> authorIds);
 
-    List<Post> findPostsByPublishedAt(List<String> publishedAt);
+    List<Post> findPostByPublishedTime(String publishedTime) throws Exception;
+
+    List<Post> findPostByPublishedDate(String publishedDate) throws Exception;
+
+    List<Post> findPostByPublishedDateTime(Timestamp publishedDateTime);
+
 }

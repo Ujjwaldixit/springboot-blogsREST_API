@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class PostController {
                                                @RequestParam(value = "search", required = false) String searchKeyword,
                                                @RequestParam(value = "authorId", required = false) List<Integer> authorIds,
                                                @RequestParam(value = "tagId", required = false) List<Integer> tagsIds,
-                                               @RequestParam(value = "publishedAt", required = false) List<String> publishedAt) {
+                                               @RequestParam(value = "publishedAt", required = false) List<String> publishedDateTimes) {
 
         try {
             Page<Post> sortedAndPaginatedPosts = postService.findPostsWithPaginationAndSorting(
@@ -46,17 +47,18 @@ public class PostController {
             if (searchKeyword != null) {
                 sortedAndPaginatedPosts = null;
                 posts = postService.findPostsByKeyword(searchKeyword);
+                if (posts == null) {
+                    List<Tag> tags = tagService.findTagsByName(List.of(searchKeyword));
 
-                List<Tag> tags = tagService.findTagsByName(List.of(searchKeyword));
+                    if (tags != null) {
+                        List<PostTag> postTags = postTagService.findPostTagsByTags(tags);
 
-                if (tags != null) {
-                    List<PostTag> postTags = postTagService.findPostTagsByTags(tags);
-
-                    posts = postService.findPostsByPostTag(postTags);
+                        posts = postService.findPostsByPostTag(postTags);
+                    }
                 }
             }
 
-            if (authorIds != null || tagsIds != null || publishedAt != null) {
+            if (authorIds != null || tagsIds != null || publishedDateTimes != null) {
                 sortedAndPaginatedPosts = null;
 
                 posts = new ArrayList<>();
@@ -65,8 +67,17 @@ public class PostController {
                     posts.addAll(postService.findPostsByAuthorId(authorIds));
                 }
 
-                if (publishedAt != null) {
-                    posts.addAll(postService.findPostsByPublishedAt(publishedAt));
+                if (publishedDateTimes != null) {
+                    for (String publishedDateTime : publishedDateTimes) {
+                        if (publishedDateTime.length() == 10) {
+                            posts.addAll(postService.findPostByPublishedDate(publishedDateTime));
+                        }
+                        if (publishedDateTime.length() == 5) {
+                            posts.addAll(postService.findPostByPublishedTime(publishedDateTime));
+                        } else {
+                            posts.addAll(postService.findPostByPublishedDateTime(Timestamp.valueOf(publishedDateTime)));
+                        }
+                    }
                 }
 
                 if (tagsIds != null) {
@@ -78,6 +89,7 @@ public class PostController {
                     }
                 }
             }
+
             return new ResponseEntity<>(posts, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -178,9 +190,6 @@ public class PostController {
                                         @PathVariable("postId") int postId) {
         try {
             Post post=postService.findPostById(postId);
-
-            if(post==null)
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
             if(post==null)
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
