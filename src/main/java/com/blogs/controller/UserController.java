@@ -6,7 +6,6 @@ import com.blogs.model.AuthenticationResponse;
 import com.blogs.model.User;
 import com.blogs.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -32,20 +31,17 @@ public class UserController {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
-    @GetMapping("/register")
-    public String showRegistrationForm(Model model) {
-        model.addAttribute("user", new User());
-        return "registrationForm";
-    }
-
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute("user") User user, RedirectAttributes redirectAttributes) {
+    public String registerUser(@RequestBody User user,RedirectAttributes redirectAttributes) {
+
         boolean checkRegistered = userService.register(user);
+
         if (checkRegistered) {
             redirectAttributes.addFlashAttribute("success", "!!! Registered Successfully !!!");
         } else {
             redirectAttributes.addFlashAttribute("error", "!!! Already Registered !!!");
         }
+
         return "redirect:/login";
     }
 
