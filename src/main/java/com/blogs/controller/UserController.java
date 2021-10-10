@@ -32,7 +32,7 @@ public class UserController {
     private JwtTokenUtil jwtTokenUtil;
 
     @PostMapping("/register")
-    public String registerUser(@RequestBody User user,RedirectAttributes redirectAttributes) {
+    public String register(@RequestBody User user,RedirectAttributes redirectAttributes) {
 
         boolean checkRegistered = userService.register(user);
 
