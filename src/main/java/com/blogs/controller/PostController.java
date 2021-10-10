@@ -72,7 +72,7 @@ public class PostController {
                         if (publishedDateTime.length() == 10) {
                             posts.addAll(postService.findPostByPublishedDate(publishedDateTime));
                         }
-                        if (publishedDateTime.length() == 5) {
+                       else if (publishedDateTime.length() == 5) {
                             posts.addAll(postService.findPostByPublishedTime(publishedDateTime));
                         } else {
                             posts.addAll(postService.findPostByPublishedDateTime(Timestamp.valueOf(publishedDateTime)));
@@ -159,10 +159,10 @@ public class PostController {
         try {
             Post post = postService.findPostById(id);
 
-            if(post==null)
+            if (post == null)
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-            if (user.getUserId()!=post.getAuthorId()||!user.getRole().equals("ADMIN"))
+            if (user.getUserId() != post.getAuthorId() || !user.getRole().equals("ADMIN"))
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
             if (postAndTags.getPost().getTitle() != null)
@@ -175,7 +175,7 @@ public class PostController {
 
             tagService.saveTag(postAndTags.getTags());
             postTagService.deletePostTags(postTags);
-            postTagService.savePostTags(postAndTags.getPost().getId(),postAndTags.getTags());
+            postTagService.savePostTags(postAndTags.getPost().getId(), postAndTags.getTags());
             postService.savePost(post);
 
             return new ResponseEntity<>(postAndTags, HttpStatus.CREATED);
@@ -189,12 +189,12 @@ public class PostController {
     public ResponseEntity<?> deletePost(@AuthenticationPrincipal UserDetailsImpl user,
                                         @PathVariable("postId") int postId) {
         try {
-            Post post=postService.findPostById(postId);
+            Post post = postService.findPostById(postId);
 
-            if(post==null)
+            if (post == null)
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-            if (user.getUserId()!=post.getAuthorId()||!user.getRole().equals("ADMIN"))
+            if (user.getUserId() != post.getAuthorId() || !user.getRole().equals("ADMIN"))
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
             postService.deletePost(postId);
@@ -211,9 +211,9 @@ public class PostController {
     public ResponseEntity<?> saveComment(@RequestBody Comment comment,
                                          @PathVariable("postId") int postId) {
         try {
-            Post post=postService.findPostById(postId);
+            Post post = postService.findPostById(postId);
 
-            if(post==null)
+            if (post == null)
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
             comment.setPostId(postId);
@@ -232,12 +232,12 @@ public class PostController {
                                                  @PathVariable("postId") int postId,
                                                  @RequestBody Comment comment) {
         try {
-            Post post=postService.findPostById(postId);
+            Post post = postService.findPostById(postId);
 
-            if(post==null)
+            if (post == null)
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-            if (user.getUserId()!=post.getAuthorId()||!user.getRole().equals("ADMIN"))
+            if (user.getUserId() != post.getAuthorId() || !user.getRole().equals("ADMIN"))
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
             comment.setPostId(postId);
@@ -257,12 +257,12 @@ public class PostController {
                                                  @PathVariable("commentId") int commentId,
                                                  @PathVariable("postId") int postId) {
         try {
-            Post post=postService.findPostById(postId);
+            Post post = postService.findPostById(postId);
 
-            if(post==null)
+            if (post == null)
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-            if (user.getUserId()!=post.getAuthorId()||!user.getRole().equals("ADMIN"))
+            if (user.getUserId() != post.getAuthorId() || !user.getRole().equals("ADMIN"))
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
             commentService.deleteComment(commentId);
