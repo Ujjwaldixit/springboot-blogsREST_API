@@ -150,7 +150,7 @@ public class PostController {
             if(post==null)
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-            if (user.getUserId()!=post.getAuthorId())
+            if (user.getUserId()!=post.getAuthorId()||!user.getRole().equals("ADMIN"))
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
             if (postAndTags.getPost().getTitle() != null)
@@ -185,7 +185,7 @@ public class PostController {
             if(post==null)
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-            if (user.getUserId()!=post.getAuthorId())
+            if (user.getUserId()!=post.getAuthorId()||!user.getRole().equals("ADMIN"))
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
             postService.deletePost(postId);
@@ -228,7 +228,7 @@ public class PostController {
             if(post==null)
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-            if (user.getUserId()!=post.getAuthorId())
+            if (user.getUserId()!=post.getAuthorId()||!user.getRole().equals("ADMIN"))
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
             comment.setPostId(postId);
@@ -253,7 +253,7 @@ public class PostController {
             if(post==null)
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-            if (user.getUserId()!=post.getAuthorId())
+            if (user.getUserId()!=post.getAuthorId()||!user.getRole().equals("ADMIN"))
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
             commentService.deleteComment(commentId);

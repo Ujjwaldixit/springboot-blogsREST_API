@@ -55,5 +55,6 @@ public class TagServiceImpl implements TagService {
         List<Tag> tags=new ArrayList<>();
         for(int tagId:tagsIds)
             tags.add(tagRepository.getOne(tagId));
+        return tags;
     }
 }
