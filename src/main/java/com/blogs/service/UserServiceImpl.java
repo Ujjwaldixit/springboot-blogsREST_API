@@ -14,7 +14,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean register(User user) {
-        if (user != null && !userRepository.existsById(user.getEmail())) {
+        if (user != null && !userRepository.existsById(user.getUserId())) {
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
             String encodedPassword = passwordEncoder.encode(user.getPassword());
