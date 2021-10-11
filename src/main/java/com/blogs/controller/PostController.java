@@ -97,7 +97,7 @@ public class PostController {
     }
 
     @PostMapping("/newPost")
-    public ResponseEntity<Post> savePost(@AuthenticationPrincipal UserDetailsImpl user,
+    public ResponseEntity<?> savePost(@AuthenticationPrincipal UserDetailsImpl user,
                                          @RequestBody PostAndTags postAndTags,
                                          PostTag postTag) {
         Post post = postAndTags.getPost();
@@ -129,7 +129,7 @@ public class PostController {
                 postTagService.savePostTag(postTag);
             }
 
-            return new ResponseEntity<>(post, HttpStatus.CREATED);
+            return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -180,7 +180,7 @@ public class PostController {
             postTagService.savePostTags(postAndTags.getPost().getId(), postAndTags.getTags());
             postService.savePost(post);
 
-            return new ResponseEntity<>(postAndTags, HttpStatus.CREATED);
+            return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -242,8 +242,11 @@ public class PostController {
             if (user.getUserId() != post.getAuthorId() || !user.getRole().equals("ADMIN"))
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
+
             comment.setPostId(postId);
             comment.setId(commentService.findCommentById(commentId).getId());
+            comment.setName(commentService.findCommentById(commentId).getName());
+            comment.setEmail(commentService.findCommentById(commentId).getEmail());
             comment.setCreatedAt(commentService.findCommentById(commentId).getCreatedAt());
 
             commentService.saveComment(comment);
