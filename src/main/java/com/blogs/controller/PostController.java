@@ -141,6 +141,8 @@ public class PostController {
                                                            @PathVariable("postId") int postId) {
         try {
             Post post = postService.findPostById(postId);
+            if (post == null)
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
             List<Comment> comments = new ArrayList<>();
 
