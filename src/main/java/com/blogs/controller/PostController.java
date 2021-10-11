@@ -71,8 +71,7 @@ public class PostController {
                     for (String publishedDateTime : publishedDateTimes) {
                         if (publishedDateTime.length() == 10) {
                             posts.addAll(postService.findPostByPublishedDate(publishedDateTime));
-                        }
-                       else if (publishedDateTime.length() == 5) {
+                        } else if (publishedDateTime.length() == 5) {
                             posts.addAll(postService.findPostByPublishedTime(publishedDateTime));
                         } else {
                             posts.addAll(postService.findPostByPublishedDateTime(Timestamp.valueOf(publishedDateTime)));
@@ -98,8 +97,8 @@ public class PostController {
 
     @PostMapping("/newPost")
     public ResponseEntity<?> savePost(@AuthenticationPrincipal UserDetailsImpl user,
-                                         @RequestBody PostAndTags postAndTags,
-                                         PostTag postTag) {
+                                      @RequestBody PostAndTags postAndTags,
+                                      PostTag postTag) {
         Post post = postAndTags.getPost();
 
         List<Tag> tags = postAndTags.getTags();

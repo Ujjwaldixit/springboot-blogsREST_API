@@ -24,6 +24,7 @@ public class Post {
 
     private String excerpt;
 
+    @Column(columnDefinition="TEXT")
     private String content;
 
     private String author;
