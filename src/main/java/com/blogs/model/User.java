@@ -15,6 +15,9 @@ import javax.persistence.*;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class User {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int userId;
+
     private String email;
 
     private String name;
@@ -22,6 +25,4 @@ public class User {
     private String password;
 
     private String role;
-
-    private int userId;
 }
