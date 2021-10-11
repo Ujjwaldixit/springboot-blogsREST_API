@@ -24,13 +24,13 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public List<Integer> saveTag(List<Tag> tags) {
+        System.out.println("inside save tag");
         List<Integer> tagIds = new ArrayList<>();
 
         HashSet<Tag> uniqueTags = new HashSet<>(tags);
 
         for (Tag tag : uniqueTags) {
-            tag = tagRepository.findByName(tag.getName());
-            if (tag == null) {
+            if (tagRepository.findByName(tag.getName())== null) {
                 Tag newTag = new Tag();
                 newTag.setName(tag.getName());
                 this.tagRepository.save(newTag);

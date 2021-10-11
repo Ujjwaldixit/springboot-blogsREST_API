@@ -101,14 +101,14 @@ public class PostController {
                                          @RequestBody PostAndTags postAndTags,
                                          PostTag postTag) {
         Post post = postAndTags.getPost();
-        System.out.println("newPost1"+post);
+
         List<Tag> tags = postAndTags.getTags();
-        System.out.println("newPost2"+tags);
+
         try {
             post.setAuthor(user.getName());
             post.setAuthorId(user.getUserId());
             post = postService.savePost(post);
-            System.out.println("newPost3"+post);
+
             int postId = post.getId();
 
             List<Integer> tagIds = new ArrayList<>();
@@ -116,8 +116,9 @@ public class PostController {
             if (tags.size() > 0) {
                 tagIds = tagService.saveTag(tags);
             }
+
             postTag.setPostId(postId);
-            System.out.println("newPost4"+postTag);
+
             if (tagIds.size() > 0) {
                 for (int tagId : tagIds) {
                     postTag.setTagId(tagId);
@@ -130,6 +131,7 @@ public class PostController {
 
             return new ResponseEntity<>(post, HttpStatus.CREATED);
         } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
